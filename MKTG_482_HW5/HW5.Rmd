@@ -1,0 +1,282 @@
+---
+title: "ASSIGNMENT NAME"
+author:
+- name: 81
+- name: Dain Hall
+- name: Trevor Cornell
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+# Preliminaries
+
+### Determine notebook defaults:
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE,      # Print all the code in all the chunks
+                      warning=FALSE,  # Don't print warning statements
+                      message=FALSE,  # Don't print other R output messages
+                      comment=NA)     # Helps produce prettier output
+```
+
+### Load packages:
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+# install.packages('splitstackshape')
+# install.packages('tools4uplift')
+library(gmodels)
+library(modelr)
+library(janitor)
+library(haven)
+library(readxl)
+library(knitr)
+library(psych)
+library(statar)
+library(tidyverse)
+library(splitstackshape)
+library(ranger)
+# library(tools4uplift)
+library(mktg482)
+library(scales)
+```
+
+### Read in the data:
+```{r}
+# use load("filename.Rdata") for .Rdata files
+load("/Users/dain/Programs/R_Projects/MKTG_482_HW5/creative_gaming.Rdata")
+
+cg_organic <- cg_organic %>%
+   mutate(converted=factor(converted))
+cg_organic_control <- cg_organic_control %>%
+   mutate(converted=factor(converted))
+cg_ad_treatment <- cg_ad_treatment %>%
+   mutate(converted=factor(converted))
+```
+
+# Assignment answers
+
+## Part 1: Uplift Modeling Using Machine Learning (Random Forests)
+
+### Question 1
+
+Prepare your data:
+Hint: Please visualize what you are doing by looking at the new data frames you create in each step.
+
+```{r}
+
+cg_ad_random <- cg_ad_treatment[sample_random_30000,]
+
+expdata_stacked <-
+   rbind(cg_organic_control %>% mutate(ad = 0), cg_ad_random %>% mutate(ad = 1))
+
+set.seed(1234)
+split.index <- stratified(expdata_stacked, c("ad", "converted"), 0.7, bothSets=TRUE) 
+
+expdata_stacked.train <- split.index$SAMP1
+expdata_stacked.test <- split.index$SAMP2
+
+expdata_stacked %>% tabyl(ad,converted) %>% adorn_percentages("all")
+expdata_stacked.train %>% tabyl(ad, converted) %>% adorn_percentages("all")
+expdata_stacked.test %>% tabyl(ad, converted) %>% adorn_percentages("all")
+```
+
+### Question 2
+
+Train an uplift model using random forests. Add the predicted scores for the treatment and control models to expdata_stacked.test and calculate the uplift score.
+
+Hint: Please see the handout “Random Forests in R.pdf” for how to run a random forest.
+
+```{r}
+rf_treatment <- ranger(converted ~ . - ad, 
+                       data=expdata_stacked.train %>% filter(ad==1),
+                       probability=TRUE, mtry=4, min.node.size=1) 
+rf_control <- ranger(converted ~ . - ad, 
+                     data=expdata_stacked.train %>% filter(ad==0),
+                     probability=TRUE, mtry=4, min.node.size=1)
+
+expdata_stacked.test <- expdata_stacked.test %>%
+   mutate(
+      pred_treat = predict(rf_treatment, data=expdata_stacked.test, type="response")[[1]][,2],
+      pred_control = predict(rf_control, data=expdata_stacked.test, type="response")[[1]][,2], 
+      uplift_score = pred_treat - pred_control
+   )
+expdata_stacked.test %>%
+   arrange(-uplift_score) %>%
+   select(converted, ad, pred_treat, pred_control, uplift_score) %>%
+   head()
+```
+
+### Question 3
+
+Calculate the Uplift (%) and Incremental Uplift (%) for the uplift model (use 20 instead of the standard 10 groups) and plot performance metrics. Interpret the plots.
+
+```{r}
+# expdata_stacked.test %>%
+#   arrange(-uplift_score) %>%
+#   select(converted, ad, pred_treat, pred_control, uplift_score) %>% head()
+PerfTable_uplift <- QiniTable(
+   expdata_stacked.test,
+   treat = "ad",
+   outcome = "converted",
+   prediction = "uplift_score", 
+   nb.group = 20
+)
+PerfTable_uplift
+QiniCurve(PerfTable_uplift)
+QiniBarPlot(PerfTable_uplift)
+"
+Interpretation: Target ~85% of creative gaming players with ads to maximize uplift
+"
+```
+
+
+### Question 4
+
+Using the incremental_Y1 column from the performance metric table created by QiniTable(), calculate the incremental profit you expect to make if you targeted the best 30,000 consumers of 120,000 using the uplift model.
+
+Hint: For every n-tile, the incremental_Y1 tells you how many incremental purchases were made when consumers up to that n-tile were targeted. To extrapolate correctly to picking the best 30,000 from 120,000, notice that there are a total of 9,000 consumers who got the ad in the test sample expdata_stacked.test.
+
+```{r}
+revenue_per <- 14.99
+cost_per <- 1.50
+
+# TBD: uplift calcs (compare against output from PerfTable_uplift)
+# 147.5319 / 450                # ~0.3278 [OK]
+# (244.7864 - 147.5319) / 450   # ~0.2165 [OK]
+# (334.7609 - 244.7864) / 450   # ~0.2005 [OK]
+
+# NOTE: T_n/C_n*C_Y1*revenue_per = "weighted control conv"
+PerfTable_uplift <- PerfTable_uplift %>%
+   mutate(inc_profit=revenue_per*incremental_Y1 - cost_per*T_n) %>%
+   mutate(inc_profit_2=T_Y1*revenue_per - T_n*cost_per - T_n/C_n*C_Y1*revenue_per)
+
+# PerfTable_uplift
+
+upliftquarterPerc <- PerfTable_uplift %>% slice(5,)
+upliftProfitFor30k <- upliftquarterPerc$inc_profit / (upliftquarterPerc$T_n/30000)
+
+paste("Incremental Uplift over Nothing Profit: ", dollar(upliftProfitFor30k))
+```
+
+### Question 5
+
+Calculate the Uplift (%) and Incremental Uplift (%) you would get if you used a propensity model (use 20 instead of the standard 10 groups). Compare the Uplift (%) performance metric between the uplift and propensity models. Interpret the difference.
+
+Hint: To compare the performance of the uplift and propensity models, use the functions QiniCurve() and QiniBarPlot()
+
+```{r}
+PerfTable_propensity <- QiniTable(
+   expdata_stacked.test,
+   treat = "ad",
+   outcome = "converted",
+   prediction = "pred_treat",
+   nb.group=20
+)
+
+QiniCurve(PerfTable_uplift, PerfTable_propensity)
+QiniBarPlot(PerfTable_uplift, PerfTable_propensity,
+   modelnames = c("Uplift Model", "Propensity Model"))
+
+# cor(expdata_stacked.test$pred_treat, expdata_stacked.test$uplift_score)
+```
+
+### Question 6
+
+Using the incremental_Y1 column from the performance metric table created by QiniTable() for the propensity model, calculate the incremental profit you expect to make if you targeted the best 30,000 consumers of 120,000 using the propensity model. How much more money do you expect to make from using an uplift instead of a propensity model?
+
+
+```{r}
+# NOTE: T_n/C_n*C_Y1*revenue_per = "weighted control conv"
+PerfTable_propensity <- PerfTable_propensity %>%
+   mutate(inc_profit=revenue_per*incremental_Y1 - cost_per*T_n) %>%
+   mutate(inc_profit_2=T_Y1*revenue_per - T_n*cost_per - T_n/C_n*C_Y1*revenue_per)
+
+# PerfTable_propensity
+
+propensity_quarterPerc <- PerfTable_propensity %>% slice(5,)
+propensity_profit_30k <- propensity_quarterPerc$inc_profit / (propensity_quarterPerc$T_n/30000)
+
+paste("Incremental Propensity over Nothing Profit: ", dollar(propensity_profit_30k))
+paste("Incremental Uplift over Propensity Profit: ", dollar(upliftProfitFor30k - propensity_profit_30k))
+```
+
+
+## Part 2: Targeting the optimal percent of customers
+
+So far we have always targeted a 25% of model-selected customers (by picking the best 30,000 out of 120,000 customers). We now want to evaluate whether we should target fewer or more than 25% of customers.
+
+### Question 1
+
+What formula would you use to select which consumers to target using a propensity model where your goal is to maximize profits? What percentage of customers in the ad treatment group of expdata_stacked.test would you target using the propensity model?
+
+```{r}
+# TBD: Why not stay with the QiniTable results?
+# propensityTarget <- PerfTable_propensity %>% slice(which.max(inc_profit))
+
+propensityTarget <- expdata_stacked.test %>%
+   mutate(ExpRev_prop=pred_treat*revenue_per)%>%
+   filter(ExpRev_prop>cost_per)
+
+cum_perc_prop <- nrow(propensityTarget)/nrow(expdata_stacked.test)
+
+paste("Propensity profit is maximized at", percent(cum_perc_prop, 0.1))
+```
+
+### Question 2
+
+What formula would you use to select which consumers to target using an uplift model where your goal is to maximize incremental profits. What percentage of customers in the ad treatment group of expdata_stacked.test would you target using the uplift model?
+
+```{r}
+# TBD: Why not stay with the QiniTable results?
+# upliftTarget <- PerfTable_uplift %>% slice(which.max(inc_profit))
+
+upliftTarget <- expdata_stacked.test %>%
+   mutate(ExpRev_up=uplift_score*revenue_per)%>%
+   filter(ExpRev_up>cost_per)
+
+cum_perc_uplift <- nrow(upliftTarget)/nrow(expdata_stacked.test)
+
+paste("Uplift profit is maximized at", percent(cum_perc_uplift, 0.1))
+```
+
+
+### Question 3
+
+Rounding the targeting percentage numbers you calculated in 1. and 2. to the nearest 5%, use the QiniTable() you calculated for the propensity and uplift models in Part 1 to calculate the incremental profits you would have obtained in the expdata_stacked.test dataset if you had targeted the optimal percentage of customers suggested by each model.
+
+```{r}
+cum_perc_prop_r <- 0.5
+cum_perc_uplift_r <- 0.35
+
+
+propensity_target <- PerfTable_propensity %>% filter(cum_per==cum_perc_prop_r)
+propensity_profit_target <- propensity_target$inc_profit
+
+uplift_target <- PerfTable_uplift %>% filter(cum_per==cum_perc_uplift_r)
+uplift_profit_target <- uplift_target$inc_profit
+
+paste("Propensity Profit: ", dollar(propensity_profit_target))
+paste("Uplift Profit: ", dollar(uplift_profit_target))
+```
+
+### Question 4
+
+Give two reasons for why one model beats the other in incremental profits.
+
+```{r}
+"
+1. The uplift model allows you filter out lesser performing targets, targeting fewer people resulting in lower cost
+2. The uplift model may 'rebucket' previously lower-performing targets, allowing you to target different, more economically profitable people
+"
+```
+
+```{r pressure, echo=FALSE, fig.cap="A caption", out.width = '100%'}
+install.packages("png")
+library("png")
+jj <- readPNG("/Users/dain/Programs/R_Projects/MKTG_482_HW5/UpliftVsPropensity.png", native=TRUE)
+plot(0:1,0:1,type="n",ann=FALSE,axes=FALSE)
+rasterImage(jj,0,0,1,1)
+```
+
+

@@ -1,0 +1,161 @@
+---
+title: 'PFG Bank: Credit Card Exercise'
+author:
+- name: Trevor Cornell
+- name: Dain Hall
+output:
+  pdf_document: default
+  html_notebook: default
+  html_document:
+    df_print: paged
+---
+
+# Preliminaries
+
+### Determine notebook defaults:
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE,      # Print all the code in all the chunks
+                      warning=FALSE,  # Don't print warning statements
+                      message=FALSE,  # Don't print other R output messages
+                      comment=NA)     # Helps produce prettier output
+```
+
+### Load packages:
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+library(gmodels)
+library(modelr)
+library(janitor)
+library(haven)
+library(readxl)
+library(knitr)
+library(psych)
+library(statar)
+library(tidyverse)
+library(AlgDesign)
+library(mktg482)
+library(scales)
+```
+
+## Mailing 1
+
+First, let's start by summarising our previous marketing campaign results.
+
+*Note:* Throughout these steps I am retaining the same (or similar) columns so they can merged.
+```{r}
+# Response Rates
+solicitation.results = read.csv("MKT_482_CreditCard.csv", header = TRUE)
+solicitation.results
+solicitation.results <- solicitation.results %>% 
+   mutate(Fee=factor(Fee), APR=factor(APR)) %>%
+   group_by(APR, Type, Fee) %>%
+   select(APR, Type, Fee, Num_Mailed, Num_Accounts, Avg_BK) %>%
+   summarise(
+      Tot_Mailed=sum(Num_Mailed),
+      Tot_Accounts=sum(Num_Accounts), 
+      Tot_Avg_BK=weighted.mean(Avg_BK, Num_Mailed)
+   ) %>% mutate(Resp_Rate=Tot_Accounts / Tot_Mailed)
+solicitation.results
+```
+
+Second, we'll merge a Full Factorial design into our partial results.
+```{r}
+# Partial Factorial Design
+solicitation.design <- list(APR=c("14.9", "16.8", "19.8"), Type=c("Fixed", "Variable"), Fee=c("20", "0")) 
+solicitation.design <- expand.grid(solicitation.design)
+
+solicitation.design <- full_join(solicitation.design, solicitation.results) %>% arrange(APR)
+solicitation.design
+```
+
+Third, we'll predict what the response rate is to a solicitation for each product offer.
+```{r}
+lr <- glm(Resp_Rate~APR*Type*Fee, data=solicitation.design, family=binomial)
+
+predictions <- predict(lr, newdata=solicitation.design, type="response")
+solicitation.design <- solicitation.design %>% mutate(Pred_Resp_Rate = predictions) 
+solicitation.design %>% select(APR, Type, Fee, Resp_Rate, Pred_Resp_Rate)
+```
+
+Fourth, we'll create a similar table of the CLV estimates that were given to us in Exhibit 2 and merge them into our analysis.
+```{r}
+# CLV Estimates
+clv.design <- list( APR=c("14.9", "16.8", "19.8"), Type=c("Fixed", "Variable"), Fee=c("20", "0")) 
+clv.full <- expand.grid(clv.design) %>% arrange(APR)
+clv.results <- clv.full %>% 
+   mutate(
+      BK_150=c(83,93,52,62,103,113,72,82, 131,141,100,110), 
+      BK_200=c(63,73,32,42,83,93,52,62,111,121,80,90),
+      BK_250=c(33,43,2,12,53,63,22,32,81,91,50,60)
+   ) %>% arrange(APR)
+solicitation.design <- full_join(solicitation.design, clv.results)
+solicitation.design %>% select(APR, Type, Fee, Pred_Resp_Rate, BK_150, BK_200, BK_250)
+```
+
+Fifth, we'll estimate the results of sending 100,000 marketing deals of each product to each CLV customer profile.
+
+```{r}
+variable_cost <- 0.50  # from Capital One ("PFG Bank"): Credit Card Exercise doc
+solicitation.profit <- solicitation.design %>%
+   mutate(
+      BK_150_Profit=dollar((100000 * Pred_Resp_Rate * BK_150) - (100000 * variable_cost)),
+      BK_200_Profit=dollar((100000 * Pred_Resp_Rate * BK_200) - (100000 * variable_cost)),
+      BK_250_Profit=dollar((100000 * Pred_Resp_Rate * BK_250) - (100000 * variable_cost)),
+   ) %>% select(APR, Type, Fee, Resp_Rate, Pred_Resp_Rate, BK_150, BK_200, BK_250, BK_150_Profit, BK_200_Profit, BK_250_Profit)
+solicitation.profit %>% select(APR, Type, Fee, Pred_Resp_Rate, BK_150_Profit, BK_200_Profit, BK_250_Profit)
+```
+
+## Mailing 2
+
+First, let's get the results from the first mailing into our analysis (New CSV File with added rows)
+```{r}
+solicitation.results2 = read.csv("MKT_482_CreditCard_v2.csv", header = TRUE)
+solicitation.results2 <- solicitation.results2 %>% 
+   mutate(
+      Resp_Rate=Num_Accounts / Num_Mailed,
+      Fee=factor(Fee), 
+      APR=factor(APR)
+   )
+
+# NOTE: This time we include Avg_BK into the regression & don't group first
+lr2 <- glm(Resp_Rate~APR*Type*Fee, data=solicitation.results2, family=binomial)
+
+solicitation.results2 <- solicitation.results2 %>% 
+   group_by(APR, Type, Fee) %>%
+   select(APR, Type, Fee, Num_Mailed, Num_Accounts, Avg_BK) %>%
+   summarise(
+      Tot_Mailed=sum(Num_Mailed),
+      Tot_Accounts=sum(Num_Accounts), 
+      Tot_Avg_BK=weighted.mean(Avg_BK, Num_Mailed)
+   ) %>% mutate(Resp_Rate=Tot_Accounts / Tot_Mailed)
+
+# change back to column names - not sure why it wouldn't allow me to keep them as-is
+colnames(solicitation.results2)[4] <- "Num_Mailed"
+colnames(solicitation.results2)[5] <- "Num_Accounts"
+colnames(solicitation.results2)[6] <- "Avg_BK"
+
+# Full Design
+solicitation.design2 <- list(APR=c("14.9", "16.8", "19.8"), Type=c("Fixed", "Variable"), Fee=c("20", "0")) 
+solicitation.design2 <- expand.grid(solicitation.design2)
+
+solicitation.design2 <- full_join(solicitation.design2, solicitation.results2) %>% arrange(APR)
+# New Predictions - note, we don't get predictions this time because we included "BK" which is NA
+predictions2 <- predict(lr2, newdata=solicitation.design2, type="response")
+solicitation.design2 <- solicitation.design2 %>% mutate(Pred_Resp_Rate = predictions2) 
+
+# CLV
+solicitation.design2 <- full_join(solicitation.design2, clv.results)
+
+# New Profit
+solicitation.profit2 <- solicitation.design2 %>%
+   mutate(
+      BK_150_Profit=dollar((100000 * Pred_Resp_Rate * BK_150) - (100000 * variable_cost)),
+      BK_200_Profit=dollar((100000 * Pred_Resp_Rate * BK_200) - (100000 * variable_cost)),
+      BK_250_Profit=dollar((100000 * Pred_Resp_Rate * BK_250) - (100000 * variable_cost)),
+   ) %>% select(APR, Type, Fee, Resp_Rate, Pred_Resp_Rate, BK_150, BK_200, BK_250, BK_150_Profit, BK_200_Profit, BK_250_Profit)
+solicitation.profit2 %>% select(APR, Type, Fee, Pred_Resp_Rate, BK_150_Profit, BK_200_Profit, BK_250_Profit)
+```
+
+
+## Preparation Questions
+
+Please see accompanying pdf 

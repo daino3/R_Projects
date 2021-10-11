@@ -1,0 +1,195 @@
+---
+title: "Homework 7 - S-Mobile Customer Churn"
+author: 
+   - name: Section 81         
+   - name: Dain Hall
+   - name: Trevor Cornell
+output:
+  html_notebook: default
+---
+
+# Preliminaries
+
+### Determine notebook defaults:
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE,      # Print all the code in all the chunks
+                      warning=FALSE,  # Don't print warning statements
+                      message=FALSE,  # Don't print other R output messages
+                      comment=NA)     # Helps produce prettier output
+```
+
+### Load packages:
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+library(gmodels)
+library(modelr)
+library(janitor)
+library(haven)
+library(readxl)
+library(knitr)
+library(psych)
+library(statar)
+library(tidyverse)
+library(dplyr)
+library(skimr)
+library(mktg482)
+library(scales)
+library(sjPlot)
+library(nnet)
+```
+
+### Read in the data:
+```{r}
+# use load("filename.Rdata") for .Rdata files
+load("smobile_churn.Rdata")
+```
+
+# Assignment answers
+
+## Question 1
+
+1. Develop a model to predict customer churn
+   • Feel free to use any technique you like to predict churn
+   • Make sure that one of your models is a logistic regression so that you end up
+     with a set of coefficients/odds ratios for the interpretation required in step 2
+   • You can use a different model for prediction and for interpretation
+   • Build the model using training and test and explain your model choice or use caret with cross-validation
+
+Hint: Don’t forget to exclude the “training,” and “customer” variables as predictors in your model.
+
+```{r}
+set.seed(1989)
+
+smobile.train <- smobile %>% filter(training == 1) 
+smobile.test <- smobile %>% filter(training == 0)
+
+paste("Churn Rate: ", percent(mean(smobile$churn), 0.1))
+
+# logistic regression
+# Question: How to add interaction to the model?
+#   * age & agemiss
+#   * income & incomemiss
+#   * income & profession
+#   * credit rating, income, and profession
+fm <- as.formula(churn ~ . - training - customer) 
+lrm <- glm(fm, data=smobile.train, family=binomial)
+# nnet
+# nnm <- nnet(churn ~ . - training - customer, data=smobile.train, size=5, decay=0.1, maxit=1000)
+# variables
+varimp.logistic(lrm) %>% plotimp.logistic()
+
+correlations <- cor(smobile.test[,1:8])
+corrplot(correlations, method="circle")
+
+smobile.test[,1:8]
+
+```
+
+## Question 2
+
+Use the model to understand the main drivers of churn
+• Report on the key factors that predict customer churn and their relative importance
+
+
+```{r}
+# smobile.test
+smobile.test <- smobile.test %>% 
+   mutate(pred_lr = predict(lrm, newdata=smobile.test, type="response")) %>%
+   mutate(pred_nn = predict(nnm, newdata=smobile.test, type="raw")[,1]) %>%
+   arrange(desc(pred_lr))
+
+
+varimp.logistic(lrm) %>% 
+   mutate(abs_var_imp=abs(var_imp)) %>% 
+   arrange(desc(abs_var_imp)) %>% 
+   select(variable, factor, abs_var_imp, var_imp) %>%
+   head(10)
+
+"
+1. occhmkr1 - homemaker (stay at home mom/dad)?
+2. age - of first household member
+3. epqdays - age of the current phone
+4. occcrft1 - occupation (crafts)
+5. mou - mean monthly minutes of use
+6. creditaa1 - high credit rating (aa)
+7. agemiss1 - age data is missing - always include together with age variable.
+8. blckvce - mean number of blocked voice calls
+9. months - [-] months in service
+10. occself1 - occupation - self-employed
+"
+gainsplot(smobile.test$pred_lr, smobile.test$pred_nn , label.var=smobile.test$churn)
+```
+
+## Question 3
+
+Use insights to develop actions/offers/incentives
+• Actions do not have to be tied to individual variables.
+• Instead, consider variable groupings that make sense, e.g. “Equipment characteristic,” “Customer usage,” etc.
+
+
+```{r}
+"
+Customer Usage [hi/low] - Higher usage, lower churn [mou, months]
+Equipmentt [new/old] - Older phone, higher churn    [eqpdays]
+Occupation [prof/unemp] - Unemployed, higher churn  [occhmkr, occself1, occcrft1]
+Age - older, higher churn                           [age, agemiss]
+Credit - better credit, lower churn                 [creditaa]
+Blocked Voice - spam?                               [blckvce]
+"
+smobile.test
+```
+
+## Question 4
+
+Estimate the impact of these actions/offers/incentives on the probability of churn • Either
+(i) simulate the effect of a churn driver (see the hint at the end of this section) or
+(ii) test the action/incentive/offer in the field
+• Perform any simulation on the rollout dataset.
+• Since you cannot execute a test, describe how you would set up a test and then assume a projected churn that results from the test.
+
+*Hint:* If you want to simulate the effect of an action, do this:
+• Train your model
+• Create a prediction for the dataset for which for which you want to simulate variable changes (here the rollout dataset).
+• Create a copy of the rollout.
+• In this dataset change any variable values you want with mutate()
+• For example, you want to know what giving people new phones does to attrition? Change eqpdays to a low number!
+• Predict using this modified dataset.
+• Compare the attrition for the groups of customers you are interested in between the original prediction and the new prediction.
+
+```{r}
+# rollout
+rollout.with_prediction <- rollout %>% mutate(training=0) 
+
+rollout.with_prediction <- rollout.with_prediction %>%
+   mutate(pred_lr = predict(lrm, newdata=rollout.with_prediction, type="response")) %>%
+   arrange(desc(score_lr))
+
+paste("Predicted Churn Rate: ", percent(mean(rollout.with_prediction$churn), 0.1))
+
+smobile.test <- smobile.test %>% 
+   mutate(unemployed=occhmkr==1 || occself==1) 
+smobile.test %>% filter( occself==1) %>% select(unemployed)
+
+predict(lrm,
+   newdata = smobile.test %>% filter(su_cutoff==0), type = "response") %>%
+mean()
+
+```
+
+## Question 5
+
+Decide which actions/offers/incentives to target to which customers
+• For each action/offer/incentive specify the exact criteria to select customers.
+
+```{r}
+
+```
+
+## Question 6
+
+Evaluate the economics
+• For each action/offer/incentive make the case for profitability.
+
+```{r}
+
+```
+

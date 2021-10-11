@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1633992674797.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "EF65F28A",
+    "lastKnownWriteTime" : 1589763377,
+    "last_content_update" : 1633992676889,
+    "path" : "~/Programs/R_Projects/MKTG_482_HW6/HW6.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "40,38",
+        "scrollLine" : "18"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

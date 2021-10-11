@@ -1,0 +1,65 @@
+---
+title: "Class 9: Intuit Quickbooks Upgrade: Moving to the Cloud -- Exercise"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+```{r, include=FALSE}
+### Determine notebook defaults:
+knitr::opts_chunk$set(echo=TRUE,      # Print all the code in all the chunks
+                      warning=FALSE,  # Don't print warning statements
+                      message=FALSE,  # Don't print other R output messages
+                      comment=NA)     # Helps produce prettier output
+```
+
+```{r}
+### Load packages:
+# install.packages('ranger')
+library(tidyverse)
+library(mktg482)
+library(sjPlot)
+library(knitr)
+library(ranger)
+```
+
+Load the data and split it into training and test:
+```{r}
+set.seed(2357)
+load("./intuit_online.RData")
+intuit.train <- intuit %>% filter(training==1)
+intuit.test <- intuit %>% filter(training==0)
+```
+
+Fit a logistic regression and explore the model fit:
+```{r}
+rf <- ranger(res ~ state + speeddown + speedup + last + numords + dollars +
+          sincepurch + version2013 + upgraded + payroll + bizflag + sex +
+          income + medhvalue, data=intuit.train, probability=TRUE, mtry=3, min.node.size=1)
+plot_model(rf, type="eff")
+```
+What do you learn about how the variables impact the prediction? Was there anything interesting or surprising?
+
+Now, predict in the test sample:
+```{r}
+pred.lr.test <- predict(lr, newdata=intuit.test, type="response")
+intuit.test <- intuit.test %>%
+  mutate(score_lr = pred.lr.test)
+```
+
+Look at the AUC and gains of the model in the test sample:
+```{r, out.width="70%", fig.align="center"}
+gainsplot(intuit.test$score_lr, label.var = intuit.test$res)
+```
+ 
+
+If you have time, estimate the profit you would make using the logistic regression.
+
+Hint: As usual, this requires:
+1. Calculating a breakeven rate.
+2. Determing what fraction you would target and their response rate.
+3. Extrapolating this to 25,000 Wave 2 customers and calculating profit.
+```{r}
+
+```
+ 

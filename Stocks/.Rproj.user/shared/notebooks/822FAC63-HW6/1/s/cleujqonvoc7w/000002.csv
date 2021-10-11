@@ -1,0 +1,11 @@
+"0","```r
+pent.nptb.test %>% tabyl(ep.offer)
+```"
+"1","    ep.offer     n    percent
+ backcountry  9686 0.05381111
+   endurance 72258 0.40143333
+     racquet 58646 0.32581111
+    strength 22030 0.12238889
+        team  5564 0.03091111
+       water 11816 0.06564444
+"

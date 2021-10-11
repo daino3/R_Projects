@@ -1,0 +1,6 @@
+"0","cols <- c('child', 'youth', 'cook', 'do_it', 'reference', 'art', 'geog')"
+"0",""
+"0","totals <- bbb %>% select(cols) %>% summarise_all(sum) %>% t() %>% as.data.frame()"
+"0","colnames(totals) <- c('total')"
+"0","totals$category <- rownames(totals)"
+"0","totals %>% arrange(desc(total))"

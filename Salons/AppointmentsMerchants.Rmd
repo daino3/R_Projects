@@ -1,0 +1,183 @@
+---
+title: "Salons Locations"
+author: "Dain Hall"
+date: "5/19/2020"
+output: html_document
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE,      # Print all the code in all the chunks
+                      warning=FALSE,  # Don't print warning statements
+                      message=FALSE,  # Don't print other R output messages
+                      comment=NA)     # Helps produce prettier output
+```
+
+### Load packages:
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+# https://geocompr.robinlovelace.net/adv-map.html
+# install.packages('sf')
+# install.packages('spData')
+# install.packages("remotes")
+# remotes::install_github("Nowosad/spDataLarge")
+
+library(sf)
+# library(raster)
+library(dplyr)
+library(spData)
+library(spDataLarge)
+
+# install.packages('tmap')
+# install.packages('leaflet')
+# install.packages('mapview')
+# install.packages('shiny')
+# install.packages('ggmap')
+library(tmap)    # for static and interactive maps
+library(leaflet) # for interactive maps
+library(mapview) # for interactive maps
+library(ggplot2) # tidyverse data visualization package
+library(shiny)   # for web applications
+library(ggmap)
+
+```
+
+## Load Data
+```{r}
+register_google("AIzaSyCZo0PhpV5JdPWC4iivTp8GJZ0c3ZeG41E")
+
+daily_appointments = read.csv("daily_appointments.csv", header = TRUE)
+daily_appointments <- daily_appointments %>% mutate(created_at=as.Date(created_at))
+
+merchant_addresses.clean = read.csv("merchant_addresses.clean.csv", header = TRUE)
+
+sales_partners = read.csv("appointments_accounts_by_sales_rep.csv", header = TRUE)
+top_reps <- sales_partners %>% head(25)
+top_reps %>% select(sales_rep, last_sold, total_sold, merchant_city, merchant_city, merchant_state, zipcode)
+
+activated_accounts = read.csv("accounts_sold_and_activated.csv", header = TRUE)
+activated_accounts <- activated_accounts %>% 
+  mutate(date=paste(date, "01", sep="-")) %>%
+  mutate(date=as.Date(date))
+```
+## Daily Appointments
+
+```{r}
+ggplot(daily_appointments, aes(x=created_at, y=number_appts, group = 1)) +
+  geom_line() + 
+  scale_x_date(breaks = daily_appointments$created_at[seq(1, length(daily_appointments$created_at), by = 90)])
+```
+## Accounts Activated
+```{r}
+avtivated_accounts.graph <- melt(activated_accounts %>% select(date, total, activated), id.vars='date') 
+cutoff <- as.Date('2019-07-01')
+ggplot(avtivated_accounts.graph %>% filter(date > cutoff), aes(x=date, y=value, fill=variable)) +
+  geom_bar(stat='identity', position='dodge')
+```
+
+
+## Geocode Merchant Addresses
+```{r}
+# merchant_addresses = read.csv("merchant_addresses.csv", header = TRUE)  
+# merchant_addresses.clean <- merchant_addresses %>%
+#   mutate(
+#     full_address=paste(street_1, city, region, sep=", ")
+#   ) %>%
+#   mutate(
+#     lon=0.0,
+#     lat=0.0,
+#     geo_address=""
+#   ) %>% select(name, full_address, number_appts, lon, lat, geo_address)
+
+# assign_coordinates(merchant_addresses.clean, 'full_address')
+
+assign_coordinates <- function(df, addr_col) {
+  for(i in 1:nrow(df)) {
+    address <- df[i,][addr_col][1,]
+    print(paste("Working...", address))
+    tryCatch({
+      coord_data <- geocode(address, output = "latlona", source = "google")
+      df[i,]$lon <- as.numeric(coord_data[1])
+      df[i,]$lat <- as.numeric(coord_data[2])
+      df[i,]$geo_address <- as.character(coord_data[3])
+    }, finally={
+      next
+    })
+  }
+}
+
+# write.csv(merchant_addresses.clean,"merchant_addresses.clean.csv", row.names = FALSE)
+```
+
+## Geocode Sales Partner
+```{r}
+
+top_reps.clean <- top_reps %>%
+ mutate(
+   city_and_state=paste(merchant_city, merchant_state, sep=", ")
+ ) %>%
+ mutate(
+   lon=0.0,
+   lat=0.0,
+   geo_address=""
+ ) %>% select(everything(), -one_of('merchant_city', 'merchant_state', 'merchant_status', 'merchant_id', 'zipcode'))
+
+coord_data <- geocode('Little Rock, AR', output = "latlona", source = "google")
+coord_data
+assign_coordinates(top_reps.clean, 'city_and_state')
+
+for(i in 1:nrow(top_reps.clean)) {
+  address <- top_reps.clean[i,]['city_and_state'][1,]
+  print(paste("Working...", address))
+  tryCatch({
+    coord_data <- geocode(address, output = "latlona", source = "google")
+    top_reps.clean[i,]$lon <- as.numeric(coord_data[1])
+    top_reps.clean[i,]$lat <- as.numeric(coord_data[2])
+    top_reps.clean[i,]$geo_address <- as.character(coord_data[3])
+  }, finally={
+    next
+  })
+}
+
+top_reps.clean
+```
+
+
+
+```{r cars}
+# resources
+# https://cran.r-project.org/web/packages/ggmap/readme/README.html
+# http://zevross.com/blog/2018/10/02/creating-beautiful-demographic-maps-in-r-with-the-tidycensus-and-tmap-packages/
+# https://geocompr.robinlovelace.net/adv-map.html
+# https://www.rdocumentation.org/packages/ggmap/versions/3.0.0/topics/qmplot
+
+lon <- 95.7129
+lat <- 37.0902
+# US MAP with Accounts
+valid_merchants <- merchant_addresses.clean %>% filter(lon != 0 & lat != 0)
+# activated_merchants <- valid_merchants %>% filter(number_appts > 0)
+good_merchants <- valid_merchants %>% filter(number_appts > 50)
+setup_not_active_merchants <- valid_merchants %>% filter(1 < number_appts & number_appts < 50)
+not_setup_merchants <- valid_merchants %>% filter(number_appts == 0)
+
+qmplot(lon, lat, data =  valid_merchants, colour = number_appts,
+ size = I(3.5), alpha = I(.6), legend = "topleft", zoom=5) + ggtitle("Total Accounts Sold")
+# qmplot(lon, lat, data =  activated_merchants, colour = number_appts,
+#   size = I(3.5), alpha = I(.6), legend = "topleft", zoom=5)
+qmplot(lon, lat, data =  good_merchants, colour = number_appts,
+  size = I(3.5), alpha = I(.6), legend = "topleft", zoom=5) + ggtitle("Good Accounts (>50 Appts)")
+qmplot(lon, lat, data =  setup_not_active_merchants, colour = number_appts,
+  size = I(3.5), alpha = I(.6), legend = "topleft", zoom=5) + ggtitle("Didn't Buy In (1-50 Appts)")
+qmplot(lon, lat, data =  not_setup_merchants, colour = number_appts,
+  size = I(3.5), alpha = I(.6), legend = "topleft", zoom=5) + ggtitle("Not Setup (0 Appts)")
+qmplot(lon, lat, data =  top_reps.clean, colour = total_sold,
+  size = I(3.5), alpha = I(.6), legend = "topleft", zoom=5) + ggtitle("Top Reps Last Sale")
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

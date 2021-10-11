@@ -1,0 +1,2 @@
+"0","by_state <- bbb %>% group_by(state) %>% summarize(customers=n_distinct(acctnum)) %>% arrange(desc(customers))"
+"0","by_state[1:3,]"

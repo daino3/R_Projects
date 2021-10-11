@@ -1,0 +1,76 @@
+"0","```r
+# OPTION A: This is the long-form of what I do below and may be more accurate, but IDK
+# pr.team, pr.backcountry, pr.endurance, pr.water, pr.racquet, pr.strength, pr.control
+# pent.nptb.test %>% filter(buyer==1, freq_team>0) %>% summarise(mean(total_os))
+# pent.nptb.test %>% filter(buyer==1, freq_backcountry>0) %>% summarise(mean(total_os))
+# pent.nptb.test %>% filter(buyer==1, freq_endurance>0) %>% summarise(mean(total_os))
+# pent.nptb.test %>% filter(buyer==1, freq_water>0) %>% summarise(mean(total_os))
+# pent.nptb.test %>% filter(buyer==1, freq_racquet>0) %>% summarise(mean(total_os))
+# pent.nptb.test %>% filter(buyer==1, freq_strength>0) %>% summarise(mean(total_os))
+# pent.nptb.test %>% filter(buyer==1) %>% summarise(mean(total_os))
+
+# OPTION B: I think this is the best approach
+## avg_ord_size <- pent.nptb.test %>%
+#   filter(total_os > 0) %>%
+#   mutate(buy_bucket=case_when(
+#      freq_team > 0 ~ \"team\",
+#      freq_backcountry > 0 ~ \"backcountry\",
+#      freq_endurance > 0 ~ \"endurance\",
+#      freq_water > 0 ~ \"water\",
+#      freq_racquet > 0 ~ \"racquet\",
+#      freq_strength > 0 ~ \"strength\",
+#      TRUE ~ \"control\",
+#   )) %>%
+#   group_by(buy_bucket) %>%
+#   summarize(customers=n(), est_tot_os=mean(total_os))
+
+osavg.team <- mean(filter(pent.nptb.test, total_os!=0 & message == \"team\")$total_os)
+osavg.backcountry <- mean(filter(pent.nptb.test, total_os!=0 & message == \"backcountry\")$total_os)
+osavg.endurance <- mean(filter(pent.nptb.test, total_os!=0 & message == \"endurance\")$total_os)
+osavg.water <- mean(filter(pent.nptb.test, total_os!=0 & message == \"water\")$total_os)
+osavg.racquet <- mean(filter(pent.nptb.test, total_os!=0 & message == \"racquet\")$total_os)
+osavg.strength <- mean(filter(pent.nptb.test, total_os!=0 & message == \"strength\")$total_os)
+osavg.control <- mean(filter(pent.nptb.test, total_os!=0 & message == \"control\")$total_os)
+
+osavg.control
+```"
+"1","[1] 50.04098
+"
+"0","```r
+# OPTION C: this isn't terrible, but is based on prior bucketing - I think we want more raw data
+# pent.nptb.test %>%
+#   filter(buyer==1) %>%
+#   group_by(mail.offer) %>%
+#   summarize(purchases=sum(buyer==1), customers=n(), rate=mean(buyer==1), est_tot_os=mean(total_os))
+
+# OPTION D: I don't think this works because linear regression will factor in lower probability to purchase, and therefore we'll take a double whammy
+# lr.ord_size_formula <- formula(total_os ~ age + female + income + education + children + freq_endurance + freq_strength + freq_water + freq_team + # freq_backcountry + freq_racquet)
+# linReg.ord_size <- lm(lr.ord_size_formula, data=pent.nptb.train %>% filter(buyer==1))
+# pent.nptb.test %>%
+#   mutate(pred_ord_size=predict(linReg.ord_size, newdata=pent.nptb.test, type=\"response\"))
+
+margin <- 0.4
+pent.nptb.test <- pent.nptb.test %>%
+   mutate(
+      ep.team=pr.team * osavg.team * margin, 
+      ep.backcountry=pr.backcountry * osavg.backcountry * margin, 
+      ep.endurance=pr.endurance * osavg.endurance * margin, 
+      ep.water=pr.water * osavg.water * margin, 
+      ep.racquet=pr.racquet * osavg.racquet * margin, 
+      ep.strength=pr.strength * osavg.strength * margin, 
+      ep.control=pr.control * osavg.control * margin, 
+   ) %>%
+   mutate(
+      ep.max = pmax(ep.team, ep.backcountry, ep.endurance, ep.water, ep.racquet, ep.strength, ep.control),
+      ep.offer = case_when(
+         ep.team == ep.max ~ \"team\",
+         ep.backcountry == ep.max ~ \"backcountry\",
+         ep.endurance == ep.max ~ \"endurance\",
+         ep.water == ep.max ~ \"water\",
+         ep.racquet == ep.max ~ \"racquet\",
+         ep.strength == ep.max ~ \"strength\",
+         ep.control == ep.max ~ \"control\",
+      )
+   )
+pent.nptb.test %>% head(5) %>% select(custid, ep.max, ep.offer)
+```"

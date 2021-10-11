@@ -1,0 +1,14 @@
+"0","```r
+revenue_per <- 14.99
+cost_per <- 1.50
+
+profit_func <- function(df, revenue_per, cost_per){
+   resp_rate   <- mean(df$converted)
+   num_purch   <- nrow(df)  * resp_rate
+   tot_revenue <- num_purch * revenue_per
+   tot_cost    <- nrow(df) * cost_per
+   data.frame(\"NumTargets\"=nrow(df), \"NumPurchasers\"=num_purch, \"ResponseRate\"= percent(resp_rate, 0.01), \"Revenue\"=dollar(tot_revenue), \"Cost\"=dollar(tot_cost), \"Profit\"=dollar(tot_revenue - tot_cost))
+}
+
+profit_func(cg_organic_control, revenue_per, 0)
+```"

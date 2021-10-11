@@ -1,0 +1,3 @@
+"0","# use load(""bbb.Rdata"") for .Rdata files"
+"0","# dirname(rstudioapi::getActiveDocumentContext()$path)"
+"0","load(""/Users/dain/Programs/R_Projects/MKTG_482_HW1/bbb.Rdata"")"

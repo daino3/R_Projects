@@ -1,0 +1,2 @@
+"0","by_state <- bbb %>% group_by(state) %>% summarize(avg_spend=dollar(mean(total))) %>% arrange(desc(avg_spend)) "
+"0","by_state[1:3,]"

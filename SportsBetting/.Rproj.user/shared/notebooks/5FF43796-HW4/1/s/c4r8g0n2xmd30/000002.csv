@@ -1,0 +1,5 @@
+"0","```r
+# use load(\"filename.Rdata\") for .Rdata files
+# rm(list=ls())
+load(\"/Users/dain/Programs/R_Projects/MKTG_482_HW4/creative_gaming.Rdata\")
+```"

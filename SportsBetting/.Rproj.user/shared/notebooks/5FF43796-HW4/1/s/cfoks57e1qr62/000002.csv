@@ -1,0 +1,7 @@
+"0","```r
+varimp.logistic(lrm) %>% 
+   mutate(abs_var_imp=(abs(var_imp))) %>%
+   arrange(desc(abs_var_imp)) %>%
+   select(variable, factor, abs_var_imp, var_imp) %>%
+   slice(0:5)
+```"

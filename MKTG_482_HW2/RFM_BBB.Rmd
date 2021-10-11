@@ -1,0 +1,242 @@
+---
+title: "Bookbinders RFM Analysis"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+```{r, include=FALSE}
+# Set some defaults for the document
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, comment=NA)
+```
+
+First, load packages:
+```{r, echo=TRUE, warning=FALSE, message=FALSE, comment=NA}
+#library(knitr)
+#library(psych)
+#library(statar)
+library(tidyverse)
+```
+
+## About this file
+
+This allows you to replicate the analysis in the class "Predicting Response with Recency, Frequency, and Monetary Value (RFM) Analysis" using the Bookbinders data. You do not have to go through this when you prepare the Bookbinders case; running and analyzing this is optional. However, this file will be important because it contains everything you will need to do for the "Tuango" assignment.
+
+## Data and Preliminaries
+
+First, we read in the data and take a look at the variables in the dataset.
+```{r}
+rm(list=ls())
+load("./bbb.Rdata") 
+str(bbb) # srt() shows the "structure" of the dataset
+```
+
+Now, let's get to what we did in class.
+
+Before we create quintiles let's ask: Will customers with the most recent purchases, the highest number of purchases, or the highest total spending be in first quintile? 
+
+Unfortunately, because the data is discrete, there is "overplotting" in a simple scatterplot so that will not allow us to answer our question:
+```{r}
+ggplot(data = bbb) + 
+  geom_point(mapping = aes(x = last,y = buyer)) 
+```
+
+Instead, we bin our the observations for plotting (here we use 20 bins as indicated in the code):
+```{r}
+bbb %>% 
+	group_by(ntile(last, 20)) %>%
+	summarize(avg_last = mean(last), perc_buyer = mean(buyer)) %>%
+	ggplot(mapping = aes(x = avg_last,y = perc_buyer)) + geom_point()
+
+bbb %>% 
+	group_by(ntile(purch, 20)) %>%
+	summarize(avg_purch = mean(purch), perc_buyer = mean(buyer)) %>%
+	ggplot(mapping = aes(x = avg_purch,y = perc_buyer)) + geom_point()
+
+bbb %>% 
+	group_by(ntile(total, 20)) %>%
+	summarize(avg_total = mean(total), perc_buyer = mean(buyer)) %>%
+	ggplot(mapping = aes(x = avg_total,y = perc_buyer)) + geom_point()
+```
+As can be seen, the answer to our question is yes for recency (`last`) but not frequency and monetary value (`purch` and `total` respectively), hence we need to apply a minus sign `-` when  creating the F and M quintiles below. 
+
+## Independent Quintiles
+
+To distinquish between independent, sequential, and intuitive approaches we
+carry the ending `_i` for the independent quintile approach in this subsection.
+We create new variables `rec_quin_i`, `freq_quin_i`, and `mon_quin_i` which
+contain the quintiles for recency, frequency, and monetary value. We use the
+basic `dplyr` functionality `mutate` to create new variables and utilize the
+`ntile` function to create quintiles (see the `5` in the call to the `ntile` function.)
+```{r}
+bbb_iq <- bbb %>% 
+  mutate(rec_quin_i = ntile(last, 5), 
+         freq_quin_i = ntile(-purch, 5), 
+         mon_quin_i = ntile(-total, 5))
+
+bbb_iq %>% 
+  select(buyer, last, purch, total, rec_quin_i, freq_quin_i, mon_quin_i)
+```
+Given this, a customer with a 111 should belong to the first quintile for recency, for frequency, and for monetary and a customer with a 243 should belong to the second quintile for recency, the fourth quintile for frequency and the third quintile for monetary.
+
+Let's double check: We should find that the highest purchase probability is found for customers in the first quintile for all three variables.
+```{r}
+bbb_iq %>%
+  group_by(rec_quin_i) %>%
+  summarize(perc_buyer = mean(buyer)) %>%
+  ggplot() + geom_col(aes(x = rec_quin_i, y = perc_buyer))
+
+bbb_iq %>%
+  group_by(freq_quin_i) %>%
+  summarize(perc_buyer = mean(buyer)) %>%
+  ggplot() + geom_col(aes(x = freq_quin_i, y = perc_buyer))
+
+
+bbb_iq %>%
+  group_by(mon_quin_i) %>%
+  summarize(perc_buyer = mean(buyer)) %>%
+  ggplot() + geom_col(aes(x = mon_quin_i, y = perc_buyer))
+```
+This looks good!
+
+Note, in the above plots, we let `ggplot2` compute the average response rate by quintile; instead, we could have done this ourselves and passed the pre-computed data into `ggplot2` like in the following:
+```{r, eval=FALSE}
+bbb_iq %>% 
+  group_by(rec_quin_i) %>% 
+  summarise(perc_buyer=mean(buyer)) %>% 
+  ggplot() + geom_col(aes(x = rec_quin_i, y = perc_buyer))
+```
+This would produce an identical plot.
+
+One interesting question is whether R, F, and M are correlated. We know from the above plots that they predict "buyer" but do they contain the same information? Let's see:
+```{r}
+bbb %>%
+  select(last,purch,total) %>% 
+  cor() %>%
+  round(4)
+```
+For this data, the answer is R and F and R and M are uncorrelated while F and M are moderately correlated.
+
+Now, let's construct the independent quintile index and plot response rates. The `paste` command concatenates the three quantiles into a single index.
+```{r}
+bbb_iq <- bbb_iq %>%
+  mutate(rfmindex_iq = paste(rec_quin_i, freq_quin_i, mon_quin_i, sep = '')) 
+
+bbb_iq %>% 
+  select(rec_quin_i, freq_quin_i, mon_quin_i, rfmindex_iq) %>% 
+  head()
+```
+
+We can now plot the response rate by independent RFM index: 
+```{r}
+bbb_iq %>% 
+  group_by(rfmindex_iq) %>% 
+  summarise(perc_buyer=mean(buyer)) %>% 
+  ggplot() + geom_col(aes(x = rfmindex_iq, y = perc_buyer))
+```
+
+## Sequential Quintiles
+
+To distinquish between independent, sequential, and intuitive approaches we
+carry the ending `_s` for the sequential quintile approach in this subsection. Let's construct the sequential quintile index:
+
+```{r}
+bbb_iq_sq <- bbb_iq %>% 
+  mutate(rec_quin_s = ntile(last, 5)) %>%
+  group_by(rec_quin_s) %>% 
+  mutate(freq_quin_s = ntile(-purch, 5)) %>%
+  group_by(rec_quin_s, freq_quin_s) %>% 
+  mutate(mon_quin_s = ntile(-total, 5)) %>% 
+  ungroup()
+```
+
+
+```{r}
+bbb_iq_sq <- bbb_iq_sq %>%
+  mutate(rfmindex_sq = paste(rec_quin_s, freq_quin_s, mon_quin_s, sep = ''))  
+
+bbb_iq_sq %>% 
+  select(rec_quin_s, freq_quin_s, mon_quin_s,rfmindex_sq) %>% 
+  head()
+```
+
+We can now plot the response rate by sequential RFM index: 
+
+```{r}
+bbb_iq_sq %>% 
+  group_by(rfmindex_sq) %>% 
+  summarise(perc_buyer=mean(buyer)) %>% 
+  ggplot() + geom_col(aes(x = rfmindex_sq, y = perc_buyer))
+```
+
+## Calculating the Average Response Rate and Mail To Indicators for Each RFM Index
+
+First, we calculate the average response rate for the independent RFM index:
+```{r}
+resp_rate_iq_df <- bbb_iq_sq %>%
+  group_by(rfmindex_iq) %>%
+  summarise(resp_rate_iq=mean(buyer)) %>% 
+  ungroup()
+
+resp_rate_iq_df %>% 
+  head()
+```
+
+Next, we calculate the average response rate for the sequential RFM index:
+```{r}
+resp_rate_sq_df <- bbb_iq_sq %>%
+  group_by(rfmindex_sq) %>%
+  summarise(resp_rate_sq=mean(buyer)) %>% 
+  ungroup()
+
+resp_rate_sq_df %>% 
+  head()
+```
+
+Now, we merge both response rate predictions back into the main data:
+```{r}
+bbb_final <- bbb_iq_sq %>%
+  left_join(resp_rate_iq_df) %>%
+  left_join(resp_rate_sq_df)
+
+bbb_final %>% 
+  select(acctnum,buyer,rfmindex_iq,resp_rate_iq,rfmindex_sq,resp_rate_sq) %>% 
+  head()
+```
+
+Finally, we want to create a variable that tells us whether we should or should not mail to a given customer. To do so, we need the break-even response rate which can be determined from the information about revenues and costs contained in the case; the break-even response rate is `0.50 / (18 - 9 - 3) = 0.083` (or 8.3%). With this information, we can create a binary (0/1 or indicator or dummy) variable that indicates whether the predicted response rate for the customer is greater than the breakeven rate.
+```{r}
+bbb_final <- bbb_final %>%
+  mutate(mailto_iq=1*(resp_rate_iq>0.083), mailto_sq=1*(resp_rate_sq>0.083))
+  
+bbb_final %>% 
+  select(rfmindex_iq, resp_rate_iq, mailto_iq, rfmindex_sq,resp_rate_sq,mailto_sq) %>%
+  head()
+```
+
+## Calculating Profitability
+
+Now we calculate profit calculations for the benchmark (no targeting) and for both RFM approaches.
+
+For the no targeting benchmark, we first need to calculate the response rate:
+```{r}
+bbb_final %>%
+  summarise(mean(buyer))
+```
+Now, we can calculate profit by hand.
+
+For the independent RFM approach, we first need to calculate the mailto rate and the response rate among those mailed to:
+```{r}
+bbb_final %>%
+  filter(mailto_iq==1) %>%
+  summarise(frac_mailed=n()/nrow(bbb_final), resp_rate=mean(buyer))
+```
+Now, we can calculate profit by hand.
+
+For the sequential RFM approach, we first need to calculate the mailto rate and the response rate among those mailed to:
+```{r}
+bbb_final %>%
+  filter(mailto_sq==1) %>%
+  summarise(frac_mailed=n()/nrow(bbb_final), resp_rate=mean(buyer))
+```
+Now, we can calculate profit by hand.

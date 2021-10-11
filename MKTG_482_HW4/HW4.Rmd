@@ -1,0 +1,321 @@
+---
+title: "Creative Gaming"
+author:
+- name: Section 81
+- name: Dain Hall
+- name: Trevor Cornell
+output:
+  html_notebook: default
+  pdf_document: default
+---
+
+# Preliminaries
+
+### Determine notebook defaults:
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE,      # Print all the code in all the chunks
+                      warning=FALSE,  # Don't print warning statements
+                      message=FALSE,  # Don't print other R output messages
+                      comment=NA)     # Helps produce prettier output
+```
+
+### Load packages:
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+library(gmodels)
+library(modelr)
+library(janitor)
+library(haven)
+library(readxl)
+library(knitr)
+library(psych)
+library(statar)
+library(tidyverse)
+library(scales)
+library(skimr)
+library(mktg482)
+library(nnet)
+library(ranger)
+```
+
+### Read in the data:
+```{r}
+# use load("filename.Rdata") for .Rdata files
+# rm(list=ls())
+load("/Users/dain/Programs/R_Projects/MKTG_482_HW4/creative_gaming.Rdata")
+```
+
+# Assignment answers
+Questions:
+1. How to convert csv -> Rdata?
+2. How to set up Rdata into multiple importable variables (like this project)?
+3. How come we're using the same data for nnet for training & testing?
+4. How are my convert & predicted convert using the models so far off?
+
+## Part 1: Exploratory Analytics
+First, to gain an understanding of whether the data is appropriate for predictive analytics, you decide to engage in some exploratory analytics. Please answer the following questions:
+
+Hint: install the “skimr” package and use the “skim_without_charts()” command (don’t forget to add library(skimr) in the header of your Rmd file). Don’t worry about formatting when you knit to pdf.
+
+   1. What is the organic probability of converting to Zalon?
+```{r}
+paste("OrganicProb(convert): ", percent(mean(cg_organic$converted), 0.01))
+```
+   2. For each feature, show basic summary statistics.
+```{r}
+skim_without_charts(cg_organic)
+```
+
+## Part 2: Predictive Model
+
+1. Create a training and test sample based on the “cg_organic” dataframe. Please use the “sample_train_org” vector to select observations for both new dataframes. You can use this syntax:
+
+```{r}
+cg_organic_train <- cg_organic[sample_train_org,] 
+cg_organic_test <- cg_organic[-sample_train_org,]
+
+lrm <- glm(converted ~ ., family=binomial(logit), data=cg_organic_train)
+# plot_model(lrm, show.values = TRUE, transform = NULL)
+# plot_model(lrm, show.values = TRUE, transform = NULL, type = "eff")
+varimp.logistic(lrm) %>% plotimp.logistic()
+```
+
+What is the training/test split?
+```{r}
+tot_rows <- nrow(cg_organic_train) + nrow(cg_organic_test)
+paste(
+   "Training Data: ", percent(nrow(cg_organic_train) / tot_rows),
+   "Test Data: ", percent(nrow(cg_organic_test) / tot_rows))
+```
+
+2. Train a logistic regression model using all features
+   a. What are the 5 most important features?
+   
+```{r}
+varimp.logistic(lrm) %>% 
+   mutate(abs_var_imp=(abs(var_imp))) %>%
+   arrange(desc(abs_var_imp)) %>%
+   select(variable, factor, abs_var_imp, var_imp) %>%
+   slice(0:5)
+```
+   
+   b. For each feature of the top 5, summarize what you learn from marginal effect plots for those variables.
+```{r}
+"
+1. NumSpaceHeroBadges: [POS] - As number of space hero badges go up, probability of 
+   conversion goes up almost to 100% (S-shaped)
+2. TimesLostSpaceship: [NEG] - As # of times lost spaceship goes up, probability of
+   conversion goes down from 4% to almost 0%
+3. NumFriendRequestIgnored: [NEG] - As number of friend requests ignored goes up,
+   probability of conversion does down
+4. GameLevel: [POS] - As Game Level goes up, so does probability - from 2% to 5%+
+5. AcquiredSpaceship1: [POS] - Yes/No: If Acquired Spacehip, probability jumps from ~3% to ~5%
+"
+```
+   c. Plot the gains curve in the test sample and report the AUC of the model.
+
+
+```{r}
+cg_organic_test <- cg_organic_test %>% mutate(score_lr = predict(lrm, newdata=cg_organic_test, type="response"))
+
+gplot <- gainsplot(cg_organic_test$score_lr, label.var = cg_organic_test$converted)
+paste("AUC: ", gplot$auc)
+```
+## Part 3: The Ad-Experiment
+You have finished building a logistic regression model to predict what kind of Space Pirates users were most likely to purchase the Zalon campaign. After debriefing Mi Haruki on the performance of the predictive model, she lays out the next steps:
+
+   “We will test the effectiveness of the in-app ad and the predictive model by exposing a random 150,000 customers to a 2-week ad campaign and measuring their conversion to Zalon over the next 2 months. At the same time, we will randomly pick another 30,000 customers and observe their organic upgrade behavior over the same period, having not served them an in-app ad.
+I want you to compare three groups based on this data.
+
+   Group 1: The randomly picked 30,000 Space Pirates users who did not receive in-app ads during the experimental period.
+   Group 2: A randomly picked 30,000 Space Pirates users among the 150,000 who were served in-app ads for Zalon.
+   Group 3: A model-selected 30,000 Space Pirates users among the 120,000 (after taking out Group 2) who were served in-app ads for Zalon.
+
+   Please report back to me how well the ads are working in terms of conversion rates and profits and by how much the model improves these metrics, all based on targeting 30,000 customers. To calculate profits, please use revenues of $14.99 from selling Zalon. The cost of serving ads to a consumer for 2 weeks is $1.50 in lost coin purchases.”
+   
+1. Calculate the response rate and profit of group 1.The dataframe is called “cg_organic_control”
+```{r}
+revenue_per <- 14.99
+cost_per <- 1.50
+
+profit_func <- function(df, revenue_per, cost_per){
+   resp_rate   <- mean(df$converted)
+   num_purch   <- nrow(df)  * resp_rate
+   tot_revenue <- num_purch * revenue_per
+   tot_cost    <- nrow(df) * cost_per
+   data.frame("NumTargets"=nrow(df), "NumPurchasers"=num_purch, "ResponseRate"= percent(resp_rate, 0.01), "Revenue"=dollar(tot_revenue), "Cost"=dollar(tot_cost), "Profit"=dollar(tot_revenue - tot_cost))
+}
+
+profit_func(cg_organic_control, revenue_per, 0)
+```
+
+2. Calculate the response rate and profit of group 2. To randomly select 30,000 customers, please use the “sample_random_30000” vector to select observations from the 150,000 row dataframe “cg_ad_treatment” which contains the customers who were exposed to the ad campaign. You can use this syntax to create the sample:
+
+```{r}
+cg_ad_random <- cg_ad_treatment[sample_random_30000,]
+
+profit_func(cg_ad_random, revenue_per, cost_per)
+```
+3. Calculate the response rate and profit of group 3. To do this please:
+(a) Use the logistic regression model you trained in Part 2 to score the 120,000
+customers in “cg_ad_treatment” who remained after sampling 30,000 in “cg_ad_test”. You can use this syntax to create the sample for scoring:
+```{r}
+cg_ad_scoring <- cg_ad_treatment[-sample_random_30000,]
+
+cg_ad_scoring <- cg_ad_scoring %>% mutate(score_lr = predict(lrm, newdata=cg_ad_scoring, type="response"))
+
+# TODO: DID I MUCK SOMETHING UP?!? `profit_func` isn't using $score_lr, it's using $converted
+cg_ad_scoring %>% summarise(resp_rate=mean(converted), pred_resp_rate=mean(score_lr))
+
+profit_func(cg_ad_scoring, revenue_per, cost_per)
+```
+
+(b) Select the 30,000 customers with best scores and use only these 30,000 (who correspond to group 3) to compute conversion rates and profits of group 3 in the next question.
+```{r}
+quartileCG <- cg_ad_scoring %>%
+   mutate(pred_buyer_quartile = ntile(-score_lr, 4)) %>%
+   group_by(pred_buyer_quartile) %>%
+   summarise(num_cust=n(), num_buyers=sum(converted), resp_rate=sum(converted)/n(), pred_resp_rate=mean(score_lr))
+
+# TODO: This has to be wrong... Resp Rates are way higher than Predicted Response Rate"
+quartileCG
+
+profitByQuartileOrig <- quartileCG[1,] %>%
+   mutate(revenue=num_buyers * revenue_per, cost=num_buyers * cost_per, profit=revenue-cost) %>%
+   select(pred_buyer_quartile, num_cust, num_buyers, resp_rate, revenue, cost, profit)
+profitByQuartileOrig
+```
+4. Answer Mi Haruki’s question: “Please report back to me how well the ads are working in terms of conversion rates and profits and by how much the model improves these metrics, all based on targeting 30,000 customers.”
+```{r}
+"
+The ads have increased conversion rates from ~5.7% to ~13.1%. The resulting profits have 
+increased 2.3x over the control group. [TBD on how the model affects this]
+"
+```
+5. Plot the gains curve in the cg_ad_scoring sample you scored in Part 3 Q3 (which used the model trained in Part 2 Q2). Also report the AUC of the model. Compare the gains curve and AUC to the ones you calculated in Part 2 Q2c. Why are they different?
+```{r}
+gplot <- gainsplot(cg_ad_scoring$score_lr, label.var = cg_ad_scoring$converted)
+paste("AUC: ", gplot$auc)
+```
+6. What is the purpose of group 1 given that we already had data on organic conversions?
+```{r}
+"TBD - IDK"
+```
+
+## Part 4: Better Data, Better Predictions
+
+Mi Hiruki called for a meeting to plan the next steps. She explained:
+   “Before we roll out the campaign globally, we want to see whether we can use the experimental data to retrain the model.
+   The idea is to model trial in response to the in-app ad, not just organic conversion, as we did initially. 
+   We know that the in-app ad, on average, increases Zalon conversions. However, if the in-app ad works for people who would
+   not have purchased the Zalon campaign organically, updating the model based on the in-app ad data should 
+   improve predictive performance. Let’s retrain the model based on the randomly chosen Space Pirates users we messaged 
+   in the experiment and see how well the updated model compares to the original model in a test sample."
+
+1. Retrain the logistic regression model from Part 2 (which was trained on “cg_organic_train”) on the sample of customers who were exposed to the ad campaign (“cg_ad_random”). Instead of creating separate training/test datasets, please use the full 30,000 sample “cg_ad_random" you created in Part 3, Q2 to train the model.
+```{r}
+cg_ad_random2 <- cg_ad_treatment[sample_random_30000,]
+lr_ad_random <- glm(converted ~ ., family=binomial(logit), data=cg_ad_random2)
+```
+2. Compare the performance of the original “organic” model from Part 2 and the “ad” model on the “cg_ad_scoring” sample you created in Part 3, Q3. Use gains curves and AUC to make the comparison. What do you find?
+```{r}
+cg_ad_scoring <- cg_ad_scoring %>% 
+   mutate(
+      score_lr_ad_random = predict(lr_ad_random, newdata=cg_ad_scoring, type="response"),       
+   )
+
+gainsplot(cg_ad_scoring$score_lr, cg_ad_scoring$score_lr_ad_random, label.var = cg_ad_scoring$converted)
+```
+3. Calculate the profit improvement of using a model trained on ad treatment instead of organic data to target the best 30,000 customers in the “cg_ad_scoring” sample.
+```{r}
+quartileNew <- cg_ad_scoring %>%
+   mutate(pred_buyer_quartile = ntile(-score_lr_ad_random, 4)) %>%
+   group_by(pred_buyer_quartile) %>%
+   summarise(num_cust=n(), num_buyers=sum(converted), resp_rate=sum(converted)/n(), pred_resp_rate=mean(score_lr))
+
+# TODO: This has to be wrong... Resp Rates are way higher than Predicted Response Rate
+quartileNew
+
+profitByQuartileNew <- quartileNew[1,] %>%
+   mutate(revenue=num_buyers * revenue_per, cost=num_buyers * cost_per, profit=revenue-cost) %>%
+   select(pred_buyer_quartile, num_cust, num_buyers, resp_rate, revenue, cost, profit)
+
+paste("Orig Profit: ", dollar(profitByQuartileOrig$profit), 
+      "New Profit: ", dollar(profitByQuartileNew$profit),
+      "Improvement: ", dollar(profitByQuartileNew$profit -profitByQuartileOrig$profit ))
+
+```
+4. Compare the variable importance plot of the “organic” model and the “ad” model to explain why the performance of the models differ.
+
+```{r}
+varimp.logistic(lrm) %>% plotimp.logistic()
+varimp.logistic(lr_ad_random) %>% plotimp.logistic()
+
+"
+It appears the models differ because the original buyers of the expansion pack included
+power users. The introduction of the ad changes the model to include new users regardless
+of in-app telemtry data.
+"
+```
+
+## Part 5: Better Models, Better Predictions
+
+Mi Haruki had enjoyed by how much the model improved when it was retrained on the ad treatment instead of organic data. However, she knew that the analytics team was not done yet:
+   “I know we have been trying to keep the modeling simple. Perhaps the logistic regression is what we go with. However, 
+   I want to explore using some machine learning models to see whether they improve our predictions."
+
+Hints:
+- To use a neural network we use the nnet package (please install it first and then load it in your R notebook). Please see the in-class handout “Using Neural Networks in Customer Analytics,” (Class8a_NN_demo.pdf) for how to run a neural network.
+
+1. Train a neural network on the sample of customers who were exposed to the ad campaign. (If you time you can also try a random forest!).
+
+```{r}
+set.seed(1234)
+cg_ad_random3 <- cg_ad_treatment[sample_random_30000,]
+
+# NOTE: THIS IS A BIG DEAL FOR NNET, NOT SO MUCH LOG REG
+cg_ad_random3 <- cg_ad_random3 %>%
+   mutate(converted=factor(converted))
+# END NOTE
+
+nn_cg <- nnet(converted ~ ., data=cg_ad_random3, size=5, decay=0.1, maxit=1000)
+rf_cg <- ranger(converted ~ ., data=cg_ad_random3, probability=TRUE, mtry=3, min.node.size=1)
+lr_cg <- glm(converted ~ ., family=binomial(logit), data=cg_ad_random3)
+
+cg_ad_scoring2 <- cg_ad_treatment[-sample_random_30000,]
+# NOTE: THIS IS A BIG DEAL FOR NNET, NOT SO MUCH LOG REG
+cg_ad_scoring2 <- cg_ad_scoring2 %>%
+   mutate(converted=factor(converted))
+# END NOTE
+
+cg_ad_scoring2 <- cg_ad_scoring2 %>%
+   mutate(score_nn = predict(nn_cg, newdata=cg_ad_scoring2, type="raw")[,1],
+          score_rf = predict(rf_cg, data=cg_ad_scoring2, type="response")[[1]][,2], 
+          score_lr = predict(lr_cg, newdata=cg_ad_scoring2, type="response"))
+```
+2. Compare the performance of the neural network “ad” model and the logistic “ad” model from Part 4 on the “cg_ad_scoring” sample. Use gains curves and AUC to make the comparison. What do you find?
+```{r}
+gp <- gainsplot(
+   cg_ad_scoring2$score_nn, 
+   cg_ad_scoring2$score_rf, 
+   cg_ad_scoring2$score_lr, 
+   label.var=cg_ad_scoring2$converted)
+gp$auc
+```
+3. Calculate the profit improvement of using a neural network instead of a logistic regression (both trained on ad treatment data) to target the best 30,000 customers in the “cg_ad_scoring” sample.
+```{r}
+quartileNN <- cg_ad_scoring2 %>%
+   mutate(pred_buyer_quartile_nn = ntile(-score_nn, 4)) %>%
+   group_by(pred_buyer_quartile_nn) %>%
+   summarise(num_cust=n(), num_buyers=sum(converted==1), resp_rate=sum(converted==1)/n(), pred_resp_rate=mean(score_lr))
+
+# TODO: This has to be wrong... Resp Rates are way higher than Predicted Response Rate
+quartileNN
+
+profitByQuartileNN <- quartileNN[1,] %>%
+   mutate(revenue=num_buyers * revenue_per, cost=num_buyers * cost_per, profit=revenue-cost) %>%
+   select(pred_buyer_quartile_nn, num_cust, num_buyers, resp_rate, revenue, cost, profit)
+g
+paste("Orig Profit: ", dollar(profitByQuartileNew$profit), 
+      "New Profit: ",  dollar(profitByQuartileNN$profit),
+      "Improvement: ", dollar(profitByQuartileNN$profit -profitByQuartileNew$profit ))
+```

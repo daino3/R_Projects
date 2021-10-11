@@ -1,0 +1,40 @@
+"0","```r
+pent.nptb.train <- pent.nptb %>% filter(training==1) 
+pent.nptb.test <- pent.nptb %>% filter(training==0)
+
+lr.formula <- formula(buyer ~ age + female + income + education + children + freq_endurance + freq_strength + freq_water + freq_team + freq_backcountry + freq_racquet)
+
+lr.team <- glm(lr.formula, family=binomial, data=pent.nptb.train %>% filter(message==\"team\"))
+lr.backcountry <- glm(lr.formula, family=binomial, data=pent.nptb.train %>% filter(message==\"backcountry\"))
+lr.endurance <- glm(lr.formula, family=binomial, data=pent.nptb.train %>% filter(message==\"endurance\"))
+lr.water <- glm(lr.formula, family=binomial, data=pent.nptb.train %>% filter(message==\"water\"))
+lr.racquet <- glm(lr.formula, family=binomial, data=pent.nptb.train %>% filter(message==\"racquet\"))
+lr.strength <- glm(lr.formula, family=binomial, data=pent.nptb.train %>% filter(message==\"strength\"))
+lr.control <- glm(lr.formula, family=binomial, data=pent.nptb.train %>% filter(message==\"control\"))
+
+pent.nptb.test <- pent.nptb.test %>%
+   mutate(
+      pr.team = predict(lr.team, newdata=pent.nptb.test, type=\"response\"),
+      pr.backcountry = predict(lr.backcountry, newdata=pent.nptb.test, type=\"response\"),
+      pr.endurance = predict(lr.endurance, newdata=pent.nptb.test, type=\"response\"),
+      pr.water = predict(lr.water, newdata=pent.nptb.test, type=\"response\"),
+      pr.racquet = predict(lr.racquet, newdata=pent.nptb.test, type=\"response\"),
+      pr.strength = predict(lr.strength, newdata=pent.nptb.test, type=\"response\"),
+      pr.control = predict(lr.control, newdata=pent.nptb.test, type=\"response\"),
+   )
+
+pent.nptb.test <- pent.nptb.test %>%
+   mutate(
+      pr.max = pmax(pr.team, pr.backcountry, pr.endurance, pr.water, pr.racquet, pr.strength, pr.control),
+      pr.offer = case_when(
+         pr.team == pr.max ~ \"team\",
+         pr.backcountry == pr.max ~ \"backcountry\",
+         pr.endurance == pr.max ~ \"endurance\",
+         pr.water == pr.max ~ \"water\",
+         pr.racquet == pr.max ~ \"racquet\",
+         pr.strength == pr.max ~ \"strength\",
+         pr.control == pr.max ~ \"control\",
+      )
+   )
+pent.nptb.test %>% head(5) %>% select(custid, pr.max, pr.offer)
+```"

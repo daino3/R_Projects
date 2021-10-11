@@ -1,0 +1,4 @@
+"0","```r
+pent.nptb.test %>% 
+   summarise_at(vars(ep.endurance, ep.strength, ep.water, ep.team, ep.backcountry, ep.racquet, ep.control), list(mean))
+```"

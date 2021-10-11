@@ -1,0 +1,9 @@
+"0","```r
+inc_profit <- 5000000 * mean(pent.nptb.test$ep.max) - 5000000 * mean(pent.nptb.test$ep.water)
+inc_percentage <- mean(pent.nptb.test$ep.max) / mean(pent.nptb.test$ep.water) - 1
+
+paste(\"Incremental Profit of ep.max v ep.water in Euros: \", dollar(inc_profit),
+      \"Incremental % of ep.ax v ep.water: \", percent(inc_percentage, 0.1))
+```"
+"1","[1] \"Incremental Profit of ep.max v ep.water in Euros:  $279,037 Incremental % of ep.ax v ep.water:  9.0%\"
+"

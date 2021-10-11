@@ -1,0 +1,1 @@
+"0","bbb %>% filter(purch >= 2) %>% summarize(num_bought=sum(buyer==1), total=n(), perc=percent(num_bought /total, 0.1))"

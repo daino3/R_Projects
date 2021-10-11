@@ -1,0 +1,3 @@
+"0",""
+"0","florence_by_gender <- bbb %>% filter(buyer==1) %>% group_by(gender) %>% summarise(total=n()) %>% mutate(percentage=percent(total/sum(total), accuracy=0.1))"
+"0","florence_by_gender"

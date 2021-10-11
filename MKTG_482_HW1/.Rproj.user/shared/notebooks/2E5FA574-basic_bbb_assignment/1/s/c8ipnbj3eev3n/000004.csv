@@ -1,0 +1,2 @@
+"0","gender <- bbb %>% group_by(gender) %>% summarise(n=n()) %>% mutate(percentage=percent(n/sum(n), accuracy=0.1))"
+"0","gender"

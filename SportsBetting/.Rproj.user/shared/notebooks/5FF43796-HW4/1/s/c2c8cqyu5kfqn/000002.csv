@@ -1,0 +1,8 @@
+"0","```r
+tot_rows <- nrow(cg_organic_train) + nrow(cg_organic_test)
+paste(
+   \"Training Data: \", percent(nrow(cg_organic_train) / tot_rows),
+   \"Test Data: \", percent(nrow(cg_organic_test) / tot_rows))
+```"
+"1","[1] \"Training Data:  70% Test Data:  30%\"
+"

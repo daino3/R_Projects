@@ -1,0 +1,150 @@
+---
+title: "Using R for Basic Customer Analysis at Bookbinders."
+author:
+- name: Dain Hall
+- name: Section 81
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+  html_notebook: default
+---
+
+# Preliminaries
+install.packages('rmarkdown')
+devtools::install_github('yihui/tinytex')
+
+### Load packages:
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+library(gmodels)
+library(modelr)
+library(janitor)
+library(haven)
+library(readxl)
+library(knitr)
+library(psych)
+library(statar)
+library(tidyverse)
+library(scales)
+library(ggplot2)
+```
+
+### Read in the data:
+```{r}
+# use load("bbb.Rdata") for .Rdata files
+# dirname(rstudioapi::getActiveDocumentContext()$path)
+load("/Users/dain/Programs/R_Projects/MKTG_482_HW1/bbb.Rdata")
+```
+
+# Assignment answers
+
+## 1. Report the number and percentage (as a fraction) of customers by gender. Please use `tabyl()` for this calculation. 
+
+
+```{r}
+bbb %>% tabyl(gender) %>% adorn_pct_formatting()
+```
+
+## 2. Report the number and percentage (as a fraction) of customers by gender. Please use dplyr verbs `group_by` and `summarise` for this calculation. You can use the function `n()` inside summarize to obtain the number of observations. Also, remember that you can do arithmetic when you define summary expressions in `summarise`. 
+
+```{r}
+gender <- bbb %>% group_by(gender) %>% summarise(n=n()) %>% mutate(percentage=percent(n/sum(n), accuracy=0.1))
+gender
+```
+
+## 3. Create a bar graph visualizing the percentage (as a fraction) of customers by gender (the second number you just calculated above).
+
+```{r}
+gender <- bbb %>% group_by(gender) %>% summarise(n=n()) %>% mutate(percentage=percent(n/sum(n), accuracy=0.1))
+ggplot(gender, aes(x=gender, y=percentage)) + geom_col()
+```
+
+## 4. Report the average Total $ spent, the average Total # of book purchases, and the average number of months since last purchase (see the "total", "purch", and "last" variables.) Please use dplyr verbs for this calculation. 
+
+```{r}
+bbb %>% summarise(total_spend=mean(total), num_books=mean(purch), months_since=mean(last))
+```
+
+## 5.  Which three states account for the largest number of BookBinders' customers? How many customers are in each of these three states? Show the data sorted in descending order by number of customers. Please use dplyr verbs for this calculation. Recall that the dplyr verb `arrange` lets you sort. If you want to sort in descending order, put a `-` in front of the sorting variable. 
+
+```{r}
+by_state <- bbb %>% group_by(state) %>% summarize(customers=n_distinct(acctnum)) %>% arrange(desc(customers))
+by_state[1:3,]
+
+```
+
+## 6.  What is the average total spending of customers in the three states you just identified (see the "total" variable)? 
+
+```{r}
+by_state <- bbb %>% group_by(state) %>% summarize(avg_spend=dollar(mean(total))) %>% arrange(desc(avg_spend)) 
+by_state[1:3,]
+```
+
+## 7. Calculate the correlation between customers’ total spending on non-book products and books (see the "nonbook" and "book" variables). See my R tutorial for how to calculate correlations.
+
+```{r}
+bbb %>% select(book, nonbook) %>% cor()
+```
+
+## 8. For the first 50 customers in the dataset only (use the dplyr `slice` verb) create a scatter plot showing the relationship between customers’ total spending on non-book products and books. 
+
+```{r}
+bbb %>% slice(0:50) %>% ggplot(aes(x=nonbook, y=book)) + geom_point()
+```
+
+## 9. Repeat the previous graph while coloring the points by gender.   
+
+```{r}
+bbb %>% slice(0:50) %>% ggplot(aes(x=nonbook, y=book, color=gender)) + geom_point()
+```
+
+## 10. Report how many books were sold in each book category. Just eyeballing the data (not sorting), which category sold the most books? Which sold the least books?
+
+```{r}
+cols <- c('child', 'youth', 'cook', 'do_it', 'reference', 'art', 'geog')
+
+totals <- bbb %>% select(cols) %>% summarise_all(sum) # %>% t() %>% as.data.frame()
+totals %>% gather(key="type", value="sum") %>% arrange(-sum)  # inverse is "spread" - column to row ("long to wide")
+# colnames(totals) <- c('total')
+# totals$category <- rownames(totals)
+# totals %>% arrange(desc(total))
+
+# sum(bbb$child)
+# sum(bbb$youth)
+```
+
+## 11. For both males and females, find the total number and also the percent who bought “The Art History of Florence”  (see the "buyer" variable).
+
+```{r}
+
+florence_by_gender <- bbb %>% filter(buyer==1) %>% group_by(gender) %>% summarise(total=n()) %>% mutate(percentage=percent(total/sum(total), accuracy=0.1))
+florence_by_gender
+```
+
+## 12. For both males and females, determine the total number of purchases and the average number of purchases (see the "purch" variable).
+
+```{r}
+purch_by_gender <- bbb %>% group_by(gender) %>% summarise(total_purch=sum(purch), avg_purch=mean(purch))
+purch_by_gender
+
+```
+
+## 13. Determine the minimum, the maximum, and the average number of months between customers’ first purchase and their most recent purchase. Use the dplyr verb `mutate` to create a new variable. 
+
+```{r}
+bbb %>% mutate(months_between=(first - last)) %>% summarise(avg_mos=mean(months_between), min_mos=min(months_between), max_mos=max(months_between))
+```
+## 14. What percent of repeat customers (those with two or more total purchases) bought “The Art History of Florence?”  
+
+```{r}
+bbb %>% filter(purch >= 2) %>% summarize(num_bought=sum(buyer==1), total=n(), perc=percent(num_bought /total, 0.1))
+```
+
+
+
+```{r}
+myVec <- matrix(1, 2, 3)
+myVec2 <- matrix(4, 5, 6)
+myVec * myVec2
+
+```

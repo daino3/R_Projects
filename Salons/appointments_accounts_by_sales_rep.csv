@@ -1,0 +1,395 @@
+sales_rep,total_sold,last_sold,merchant_name,merchant_status,merchant_city,merchant_state,zipcode,merchant_id
+Chance Armour,25,2020-05-19,Arthur the Barber,In-Process,Little Rock,AR,72205,5ec434389adef394950e7570
+Chris LaBonte - Retail,17,2020-04-13,Screamery Creamery,Active,concord,NC,28025,5e94b9ff9adef331e2c9cc48
+Craig Dickson,17,2020-05-01,Harvey Automotive,Active,Mobile,AL,36606,5eb0584cfc1ebc394e379d02
+Trey Harrell,16,2020-05-19,Haddock's Quick Stop,In-Process,Florence,AL,35633,5ec562259adef3ebdec71cd5
+Donnie Jones,15,2020-03-11,Winter Garden Barber Shop,In-Process,Winter Garden,FL,34787,5e6926e59adef35f45238fda
+Adam Kalker,14,2020-05-15,Jean Luc Caribbean Cuisine,In-Process,Fort Lauderdale,FL,33304,5ebf25f49adef35326c63e6d
+Ivan Morales,14,2020-05-20,The Goddess Of STL,In-Process,Maryland Heights,MO,63043,5ec555319adef3cb5d867529
+Valerie Williams,13,2018-09-21,Eyebrows R Us - Bonanza/Nellis,Active,Las Vegas,NV,89110,5ba2c7a5e00cf21c3f3ff447
+Jamie Watson,12,2020-03-18,GotNailedAtWendysNailAndSpa,Pending Active,Jacksonville Beach,FL,32250,5e726fc4c21f821598290f1a
+James Morgan,11,2020-03-09,Directed Wellness Center,Active,Independence,MO,64050,5e66b2ea9adef3666399399e
+Jet Bunditwong,11,2020-04-23,Wren & Ivy Salon Co,In-Process,Gastonia,NC,28052,5ea329e89adef379ce446e52
+Kevin Phillips,11,2020-05-04,Desert Wind Coffee Roasters,Active,Henderson,NV,89011,5eb09fecfc1ebc55b274e617
+Mario Lopez,11,2020-03-11,Guerreros Restaurant,Active,Edinburg,TX,78542,5e6a6f20c21f82ae8045d57f
+Elijah (Eli) Martinez,10,2020-05-05,Patron's BBQ,Pending Active,Taft,TX,78390,5eb1dc57fc1ebc1779846e6f
+Michael Gerken,10,2020-05-05,Loadem Up Trailer Rental & Sales,In-Process,Carver,MN,55315,5eb19cfafc1ebc03eecd5f7b
+Zach Smith,10,2020-05-12,Unique Beauty By Diana,Pending Active,Orem,UT,84097,5ebb24179adef3dccae0b65b
+Diana Durgin,9,2020-02-14,Sun Spa Tanning,Active,Lakewood,CO,80226,5e4738ea9adef35e3c0d13c6
+Mari Blair,9,2020-04-28,Cynthia's Catering Services,In-Process,Round Rock,TX,78681,5ea9a0b5fc1ebc2536009af0
+Chuck Braverman,8,2020-04-17,New Island Massage and Spa,Active,Davie,FL,33314,5e9a183cfc1ebc2ea1458af0
+Joshua Cazares,8,2020-05-06,Gilead Ministry Center,In-Process,Brunswick,GA,31520,5eb2f10e9adef361452b9a8a
+Zachary Collins,8,2020-04-14,Emergency Chiropractic,Pre-Cancellation,Mason,OH,45040,5e9645fbfc1ebc019ec4ac3a
+Carlos George,7,2020-01-16,Life Changers Worship Center,Active,Mesa,AZ,85210,5e209c82c21f82406e2fd574
+Chuanta Stubbs,7,2019-11-21,Greatest Colors and Design Hair Salon,Pre-Cancellation,Lutherville,MD,21093,5dd6fcc09adef3cf044115b6
+Clarence Roberts,7,2020-03-12,Molina Endodontics,Active,Downey,CA,90241,5e6ab62ac21f82c964f9f9df
+Daniel Smith,7,2020-02-11,Photography by Saprina,Active,Morristown,TN,37814,5e42fdd6c21f82d1a69edd5f
+George Cintron,7,2020-02-03,Chaotic Nailz,Active,Jacksonville,FL,32210,5e3862f3c21f82ad715286af
+Jesse Mena,7,2019-05-16,Xtreme Core Fitness llc,Active,HORIZON CITY,TX,79928,5cde021be00cf258d1cb1b5f
+Josh Isaacs,7,2020-02-10,Nenette’s Beauty Salon,Active,San Diego,CA,92126,5e4303c59adef3f9ca6ff108
+Joshua Gregorio,7,2019-08-22,Phamtastic Mobile Detailing,Active,Medford,OR,97504,5d5f20b874cae951fea3be92
+Mia Heflin,7,2019-06-26,Gemma Winslet Nail Lounge,Cancelled,Lake Mary,FL,32746,5d13f42ee00cf204ede0eebb
+Miguel Alvarez,7,2020-01-30,Zoe Lamadrid Stylist,Active,Tucson,AZ,85711,5e33544f9adef368897f319e
+Nick Fisher,7,2019-11-11,Kathy Schienberger LAc,Cancelled,White Bear Lake,MN,55110,5dca04cac21f82ed30b1d404
+Sandy Overman,7,2018-11-08,A Head of Style - Robin,Cancelled,Fairbury,IL,61739,5be4c677e00cf2771c2ddd9e
+Todd Larkin,7,2020-05-11,Shawn Rolloffs,In-Process,Braham,MN,55006,5eb9da68fc1ebc2b1cae7296
+D.Jauron Pigg,6,2019-10-23,Matt the Barber,Cancelled,Kokomo,IN,46902,5db1c3fc9adef361e8e053c2
+Dan Field,6,2019-08-09,Mindy Rogowski,Cancelled,Greenwood,IN,46142,5d4dd83974cae923ac45ef15
+Eddie Leppert,6,2020-04-30,Nash Auto Sales LLC,Active,Pickens,SC,29671,5eac604e9adef3cb041c3e16
+Frank White,6,2019-11-04,Zhenni Spa,Active,Murfreesboro,TN,37129,5dc0a6fd9adef3eea81231df
+Greg Quasius,6,2020-02-06,MK Flooring,Active,New London,WI,54961,5e3ca3049adef3768108e751
+James Ta,6,2020-02-10,Pro Nails,In-Process,Woburn,MA,1801,5e41f7479adef334b166fa54
+Jennifer Burke,6,2020-03-13,Cuts by Kelsie,Active,Lynn Haven,FL,32444,5e6c0aafc21f821752009db6
+Luis Munoz,6,2020-03-20,Rossy's Bookkeeping & Tax Services,Active,Edinburg,TX,78541,5e750f16c21f829a494c064a
+Paulette Mason,6,2020-04-21,Positively Whole Health,Active,Lone Tree,CO,80124,5e9f83479adef31e16773974
+R. Andrew Kimball,6,2020-05-14,Jay's Barbershop - Mo,In-Process,Salt Lake City,UT,84106,5ebd9c02fc1ebc5cab46f9fe
+Stephen Colson,6,2020-05-12,KK's Castle,Pending Active,Murfreesboro,TN,37129,5ebc1ff49adef3795b504c61
+Steve White,6,2020-05-12,Dileos Service Center,In-Process,Wyoming,PA,18644,5ebb0f0efc1ebc60609bf415
+Steven Gates,6,2020-03-09,Elite Class Automotive,Active,Locust,NC,28097,5e67e364c21f8243a76c71b0
+Adrian Starks,5,2020-01-29,Local Gurus Digital,Active,Virginia Beach,VA,23452,5e31c241a74b6d7b0e5980a9
+Andrew Sylivant,5,2019-05-29,Barks N Bubbles LLC,Active,Carrollton,GA,30117,5ceee168e00cf266603729a9
+Arthur Piña JR,5,2019-05-22,4 Seasons Shoe Boutique,Unable-to-Activate,Dallas,TX,75287,5ce592b9e00cf258563fd1b3
+Cameron Hynes,5,2020-02-19,A Plus Barber Lounge,Active,Petersburg,VA,23803,5e4dcb17c21f82e3d4e5e5da
+Charles Franklin Jr.,5,2020-05-05,SPECIALIZED ELECTRICAL SERVICES,Pending Active,Otsego,MI,49078,5eb2dd6a9adef327c9063e1b
+David Kadleck,5,2020-04-14,School of Creation,Active,Millcreek,UT,84107,5e95fc619adef3cc2d3e894b
+Erik Rekdal,5,2020-05-06,Moler Barber School of Saint Paul LLC,Active,Saint Paul,MN,55130,5eb2f0ce9adef361452b9a7a
+Horaczeo Crawford,5,2020-04-09,Nails by Synovia,Active,Miami,FL,33127,5e8f893b9adef35404ba2a18
+Jacob Patterson,5,2020-02-21,The Grand Marshall Barber,Active,Orem,UT,84097,5e50440c9adef3c508320653
+Jason Sheber,5,2019-12-19,Bodyworks Massage Academy,Active,Sault Sainte Marie,MI,49783,5dfbb3109adef3131daa6c7f
+Kimberly Goodman,5,2020-03-06,Clear the Clutter Professional Organizers,Pending Active,Estero,FL,33928,5e62b28ec21f82716bf85aaa
+Michael (Mickey) Husby,5,2019-06-03,Viva Diva Nails,Active,Ypsilanti,MI,48198,5cf58e33e00cf26b3be65b44
+Nichole Brown,5,2020-05-15,Camarillo Insurance Agency,In-Process,Houston,TX,77060,5ec2b2d69adef3e07669f99a
+Rezwan Choudhury,5,2019-05-14,Overall Development & Nutrition,Cancelled,Chicago,IL,60630,5cdb5488e00cf24d66cb14f1
+Steve McGarry,5,2020-05-06,Geobany's Upholstery,Active,Roanoke,VA,24017,5eb346929adef379dbd2043c
+Anthony (Tony) Esposito,4,2020-03-12,Osuch Tri State Race Planners,Active,Ashland,KY,41101,5e6a7bc6c21f82ae8045d5e1
+Bart Davis,4,2020-01-29,Derick Thomas Hair Stylist,Active,Haleyville,AL,35565,5e31ba36c21f8272f86fa23c
+Ben Jimmerson,4,2020-05-15,The Bean Bro Ozark,In-Process,Ozark,AL,36360,5ec2ad6f9adef353256e569b
+Beverlie Lee,4,2020-02-19,Auto Stylz,Active,Portsmouth,OH,45662,5e4dc15c9adef3f99db2c45e
+Carol Braund,4,2020-03-13,Grips Ink Art Collective,Pending Active,Atlanta,GA,30318,5e6fa6d5c21f8277d9a342a3
+Cecil Palmer,4,2020-04-28,Salvage Hair Studio,In-Process,San Dimas,CA,91773,5ea99f199adef3d90fa9194c
+Chris Labonte - Website,4,2020-01-08,Tim Stites,In-Process,Colorado Springs,CO,80923,5e1611a2c21f82fc4e5da923
+David McGuffin,4,2020-02-03,A To Z Driving School,Active,Houston,TX,77038,5e38c48d9adef338ab5204c3
+Henry Viera,4,2020-03-09,Better Homes,Active,Dansville,NY,14437,5e668facc21f82052ecc257d
+Ivon DeLao,4,2020-03-06,Amanda Horton,In-Process,Bowie,TX,76230,5e62cfd39adef3ba14d44574
+Jose Rios,4,2019-09-12,Modesto Cuts,Active,Modesto,CA,95350,5d7ac64e74cae92ed4a8429b
+Lance Hendrix,4,2020-02-07,We Get it Done Car Care,Pre-Cancellation,Florence,AL,35630,5e3df9ed9adef330ede8b516
+Nick Mcknight,4,2020-01-31,Mcguire Welding,Active,Lake City,FL,32024,5e3603069adef368c062554b
+Alfred Terilli,3,2019-02-28,Images By Vincenzo,Active,Rochester,NY,14623,5c7864fce00cf21c776566db
+Andrew Seifert,3,2020-02-21,Healthy Nurse by Design,Pending Active,Minneapolis,MN,55424,5e5010b69adef3500e5e71a9
+Anthony Krosinski,3,2020-01-31,shear experience,Active,Sparta,WI,54656,5e34bb0fc21f82347749347e
+Arturo Lechuga,3,2020-04-07,Soulful Tastings,Active,El Paso,TX,79934,5e8ceb629adef364633d43bf
+Bill Samagalsky,3,2019-05-08,Quick Tires,Active,Covington,GA,30014,5cd30e17e00cf24998f59228
+Bruce Conser,3,2019-09-10,Willow Wellness Salon & Spa,Active,Concord,NC,28025,5d78210c74cae93945200f98
+Chris Adams,3,2019-09-24,Shear Obsession 2,Active,Morehead,KY,40351,5d8a9c7d74cae9126c49f9fa
+Christina Geremia,3,2019-03-18,Salon Sapphire by Sabrina Marie Inc.,Cancelled,Johnston,RI,2919,5c901871e00cf278b82d45e6
+David Braund,3,2019-05-30,Brow Xpressions & Beauty Spa,Cancelled,Acworth,GA,30101,5cf081b9e00cf27f35e64d85
+David Felten,3,2020-01-31,Southwest Rootz Salon,Active,Albuquerque,NM,87107,5e3493a49adef3f63b6248ac
+David Tiet,3,2020-02-28,Green Turtle Salon & Spa,Active,Henderson,NV,89012,5e596330c21f82e19a17fc13
+Emily Blancovich-Bonilla,3,2020-03-16,Spa Halcyon,Active,Albany,NY,12210,5e6fb7e59adef3a56d80e2a1
+Eric Graham,3,2020-03-31,CCR Shop,Active,Beeville,TX,78102,5e839539c21f8205671f2621
+Eurich Z. Griffin III,3,2020-04-28,RADIANT WELLNESS CENTER,Active,Saint Petersburg,FL,33701,5ea89a7afc1ebc7edcffde29
+Francisco Hernandez,3,2020-03-19,Era Salon,Active,Citrus Heights,CA,95621,5e73e2269adef36e575679a2
+Gia Guglielmo,3,2020-05-14,April Snow Wella Stylist,Pending Active,Las Vegas,NV,89145,5ebebe0afc1ebc0da495c804
+Heather Bresnahan,3,2019-08-02,Eclectic CO.,Active,Colorado Springs,CO,80903,5d4471bc74cae91d804adb3f
+Heather Gifford,3,2019-10-15,The Hair Shoppe,Active,Greene,IA,50636,5da63c06c21f826f9878b1fe
+Hope Esquibel,3,2020-03-11,The Center For Holistic Wellness,Pending Active,Carson City,NV,89706,5e692aef9adef34c7b23ecd2
+Jameil Lee,3,2018-11-07,Nu Da Locsmyth,Terminated,Florissant,MO,63033,5be60075e00cf2771c2dec42
+Jesse Liu,3,2019-05-23,Paradise Spa,Active,Towson,MD,21204,5ce7147ae00cf258563fe144
+Leah Ortiz,3,2020-04-20,Muse Beautique,Active,Fort Myers,FL,33907,5e9dfeda9adef3a6e2ae5de5
+Lee Rosenblatt,3,2020-02-21,Strengthen Yourself Natural Care,Pre-Cancellation,Heber City,UT,84032,5e5422789adef3f97567be5e
+Luke Patterson,3,2019-05-22,Radiant Window Cleaning INC,Unable-to-Activate,Duluth,MN,55807,5ce5ba04e00cf2691e3fc5eb
+Marcus (Marc) Harrell,3,2020-01-31,Rise Holistics,Pre-Cancellation,Houston,TX,77095,5e33b224c21f82ffe027833f
+Martha Cogdill,3,2019-05-31,Rhino Sheds LLC,Cancelled,Mount Airy,NC,27030,5cf1e173e00cf24426e65620
+Michel Gulick,3,2020-01-24,Bark Place 81st,Active,New York,NY,10028,5e2dc6289adef3b67b5d7d70
+Patricia Corwin,3,2020-03-06,DIY Garage Knox,Pending Active,Knoxville,TN,37920,5e62d78f9adef383f99c31ee
+Raoul Wane,3,2019-10-03,Bless African Hair Braiding Shop,Active,Kansas City,MO,64118,5d966cc99adef3542b108d2a
+Robert Bruno,3,2019-10-01,Magdalenas Beauty Salon and Spa,Active,PHOENIX,AZ,85032,5d939eacc21f82a7648da084
+Stacey Vorous,3,2019-02-12,Contemporary Hair Design,Active,Danville,CA,94526,5c634a3be00cf22670814bdf
+Storm Chadwick,3,2020-04-27,Dom's Barber Shop,In-Process,Telford,PA,18969,5ea7638e9adef3582b8ae110
+Storm Chadwick (Old Profile),3,2019-12-18,Oceanside Automotive Specialists,Active,Oceanside,CA,92054,5dfd2e019adef3361334acb2
+Tamica Purdy,3,2019-10-23,"McNabbs Tattoo and Fine Art, LLC",Active,Boise,ID,83709,5db0c3e5c21f826f073ea849
+Tammie Ormson,3,2020-02-24,Danjoe,Active,Pacific,MO,63069,5e5458c99adef34ed8e80eb8
+Vincent Campellone IV,3,2020-01-30,EastSide Auto Repair LLC,Active,Allentown,PA,18109,5e3384d39adef3bd5289ffc7
+Aaron Arcaute,2,2019-01-17,New Dimension Spa & Salon,Cancelled,Weslaco,TX,78596,5c40cc14e00cf25439be89db
+An Le,2,2018-08-21,Coco Nail Salon & Spa,Active,Hermintage,PA,16148,5b7c7d3ce00cf22af05cd44b
+Anthony Azzati,2,2020-02-25,Pizzazz Salon,Cancelled,Fort Lauderdale,FL,33308,5e557e4b9adef373ed292366
+Ashley Lifgren,2,2019-12-23,Starbrite Window Cleaning,Cancelled,Blaine,MN,55449,5e0166c3c21f8252d7b4fe34
+Blake Lansing,2,2019-12-23,Lyric House Beauty Co,Active,Hendersonville,TN,37075,5e0153039adef39ebd4c90eb
+Brian Peters,2,2019-10-21,Faith Fitness Center,Active,Quitman,GA,31643,5daf6e4f9adef39780c86866
+Brodrick Foster,2,2018-09-25,Kash's Lashes by Kashina,Cancelled,Thomaston,GA,30286,5baaca3be00cf2248684a362
+Calvin Dotson,2,2019-09-24,Hair by Charity,Cancelled,Locust,NC,28097,5d8b9e8974cae95b99bf9990
+Chanda Washington,2,2019-05-28,Lash Revival LLC,Active,Mobile,AL,36606,5cef3317e00cf2256ae645ba
+Charles Sulzen,2,2019-11-19,Clips & Cuts Hair Salon,Active,Houston,TX,77040,5dd49c27c21f829f5cd35134
+Chelsea Ziskin,2,2019-09-16,MOMMAS MEDISPA,Active,Solana beach,CA,92075,5d80033e74cae93a2e366d12
+Christopher Joseph,2,2019-10-24,What A Tease Hair Studio LLC,Active,Lima,OH,45807,5db23d759adef36b7751423f
+Clark Pierson,2,2019-05-31,Copper Leaf Dental,Active,Taylorsville,UT,84129,5cf1b535e00cf27f35e65be4
+Dale Stanley,2,2019-04-10,"Nourish, LLC",Cancelled,Radford,VA,24141,5cae97b2e00cf22f39f7f978
+Danielle Brunson,2,2020-03-20,BON BON SALON,Active,Brigham City,UT,84302,5e7a2eccc21f8240c2132eac
+Danny White,2,2018-10-04,Kent Williams,Cancelled,Little Rock,AR,72204,5bb682cfe00cf202fa6fd0af
+Darla Revels,2,2019-03-20,Five Elements of Healing LLC,Cancelled,concord,NC,28025,5c92e422e00cf2167590bbeb
+David Neef,2,2020-01-02,J&L Horst Inc,Active,Broken Arrow,OK,74012,5e0f8156c21f82702414a138
+David Woelper,2,2020-04-16,Migs Squad Cleaning Services,In-Process,Springfield,MA,1107,5e9892a3fc1ebc63a6cc6fdb
+DeAnn Nelsen-Abel,2,2019-10-17,The Zen Zone,Active,Hubertus,WI,53033,5daa0c61c21f82cd70a06377
+Debby Echols,2,2019-08-26,Trenz Too,Cancelled,Harrison,AR,72601,5d64313374cae9385da3c676
+Deon A. Moore,2,2019-11-18,JOSIE BELLE BEAUTY SUPPLY STORE LLC,Active,PALM BAY,FL,32907,5dd354b3c21f827a11237ef5
+Eli Bowman,2,2020-02-28,Bug Avengers,Active,Reynoldsburg,OH,43068,5e5d78e9c21f826fbbd4736b
+Eric Cramer,2,2020-04-13,Life Long Appliance,Pending Active,San Diego,CA,92115,5e95e4bcfc1ebc6fdc53e21d
+Eric Suarez,2,2020-03-04,Restaurant Guerrero,Pre-Cancellation,Moses Lake,WA,98837,5e603aa5c21f82020c5c8603
+Francisco Petinga,2,2019-05-24,Imo's Cafe,Cancelled,Farmer CIty,IL,61842,5ce83d1de00cf2691e3fdcc1
+Gary Trobee,2,2019-04-01,Kate Trobee,Active,Colorado Springs,CO,80917,5cab6f52e00cf22fa3f1c626
+Georgia Wright-Hewitt,2,2019-05-23,Actikare of Fredericksburg,Active,Fredericksburg,VA,22407,5ce71cbee00cf213743fc46f
+Gerred Zeising,2,2018-08-08,Reta Thiele,Cancelled,Sioux City,IA,51106,5b6b4c39e00cf20ec6fb6b2e
+Greg Rush,2,2019-02-20,Chattanooga Day Spa,Cancelled,Chattanooga,TN,37402,5c6da94de00cf22014450c90
+Holly Trevino,2,2018-09-27,Demetrius Cooper,Cancelled,Converse,TX,78109,5babc8a8e00cf2248684a47e
+Jacob Chapman,2,2020-03-17,SM Brown Financial,Terminated,Palmdale,CA,93552,5e711b729adef35c463f238c
+James (Jim) Toland,2,2020-02-29,Law office of Thomas J Flanagan Jr,Active,Walpole,MA,2081,5e5d69afc21f826c8b925117
+Janie Grammer,2,2020-01-20,Storey Automotive,Active,Hartselle,AL,35640,5e2755089adef3baf52acfb2
+Javier Contreras,2,2019-05-21,El Barbero Inglés,Cancelled,CDMX,DIF,9060,5ce433c059d3974c900b9156
+Javier Hernandez,2,2019-11-13,"Morgan Investigative Group, LLC",Active,Fort Worth,TX,76244,5dcde969c21f82e4f29dd1c7
+Jeff Larson,2,2020-04-24,River Hills Moving,Active,Center Point,TX,78010,5ea7203bfc1ebc3374de469d
+Jeffrey Swartz,2,2020-02-21,Maria Flor,Active,Plymouth,MA,2360,5e543d46c21f8201ad0ef3aa
+Jeffrey Wilkins,2,2019-10-31,House of Junia Salon & Boutique,Unable-to-Activate,White Sulphur,WV,24986,5dbb72079adef338eaa4f642
+Jennifer Eicher,2,2019-12-18,Nano's Hair and Day Spa,Active,Chicago,IL,60646,5dfad35fc21f82e691491b2b
+Joel Weber,2,2020-03-14,Woof Gang Bakery and Grooming,Active,Alexandria,VA,22315,5e6fb83e9adef3a56d80e2ac
+Jonathan Yates,2,2020-01-30,Metta Health Institute,Active,Plano,TX,75023,5e323a2ac21f82937276d50a
+Josh Cesare,2,2020-01-08,Grand Salon Hair Studio,Active,Scotia,NY,12302,5e17bbf1c21f825d6fd598ae
+Juan Torres,2,2020-05-01,Vinny's Bakery,In-Process,Pasco,WA,99301,5eac86939adef32c5825a314
+Jung No,2,2020-03-06,Modular Installations LLC,Active,Kailua,HI,96734,5e6297429adef3138d1c35e5
+Justin Anderson,2,2019-08-09,Toni and Guy,Active,Lone Tree,CO,80124,5d4df8dc74cae923ae45f860
+Kandi Erickson,2,2018-09-20,Estilo Salon,Active,Menomonie,WI,54751,5ba3ddc7e00cf21c3f3ff54c
+Kayle Ersek,2,2019-05-17,Platinum Tech,Unable-to-Activate,Helena,MT,59601,5cdf1770e00cf213733fbba5
+Ken Carter,2,2019-09-03,Pat's Hair We Are,Active,El Paso,TX,79925,5d6ee7eb74cae93c95e36399
+Kian Foster,2,2017-09-14,Willis Day Spa,Active,Ridgeland,MS,39157,59baa7f79d29c90af63f2e62
+Lawrence (Jay) Long,2,2019-11-14,Craig Perrigo - Alexander York,Active,Spokane,WA,99201,5dcda8f79adef30c3a883aa8
+Lisa Maloney,2,2019-08-27,Celebrity Nails and Spa,Active,Chicago,IL,60622,5d65612b74cae962e3f22ee5
+Lori Sanders,2,2020-05-18,Valencia Auto Mechanics LLC,In-Process,Pascagoula,MS,39563,5ec2e18f9adef3c93628b5bd
+Malak Aoukach,2,2020-01-30,Beauty Sensai,Pre-Cancellation,Pleasanton,CA,94588,5e3894a39adef3f34a4ea5b2
+Marc-Edward Canny,2,2019-03-04,The Upper Kut,Cancelled,TwentyNine Palm,CA,92277,5c7eb404e00cf20a14c4bed6
+Michael Dickerson,2,2019-05-24,Science Education Center Inc,Active,Wichita,KS,67211,5ce87feee00cf23dec3fb58c
+Michael Goetsch,2,2019-09-24,Bolt Chiropractic,Active,Pt Hueneme,CA,93041,5d8b9df874cae95cabbf9935
+Mojtaba (Moji) Alavi,2,2020-05-15,Lili's Hair Salon,In-Process,Plano,TX,75093,5ec2f9a69adef30f2bb0b319
+Monica Coburn,2,2019-10-28,Body Kinetics Wellness,Cancelled,Las Vegas,NV,89118,5db8bd019adef3b228de17ec
+Nick DeNinno,2,2020-04-21,My Car Care Connection,In-Process,Fort Lauderdale,FL,33312,5e9f60e09adef39d3fe778d7
+Nikki Newman,2,2020-02-12,Dallas ProMax,In-Process,Frisco,TX,75034,5e44649cc21f822abedaf90f
+Nimer Massis,2,2020-03-09,Dominion's Pizza,Active,Fresno,CA,93720,5e66b1b2c21f820a8083d4d0
+Patricia Cummings,2,2019-05-24,A Better Way,Terminated,Foley,AL,36535,5ce84d93e00cf257433fbd4f
+Paul Kimball,2,2019-12-02,HOT 10 NAILS,Active,KEARNS,UT,84118,5de6ac6cc21f82f8ef5a5077
+Paul Montmeny,2,2020-02-20,Capricorn Nails,In-Process,Lakewood,WA,98499,5e4ed6269adef3fa3c33ab1a
+Philip Wali,2,2019-06-10,E & R beauty Supply,Cancelled,Charleston,NC,1920,5cfea3a0e00cf212c5b4060b
+Robert Brockmann,2,2019-09-03,Lexi’s Chicken Wing Dip,Active,Bradenton,FL,34203,5d6eeaeb74cae942eae36382
+Robert Galyan,2,2019-05-23,Trotter Brothers Flooring,Active,Greensboro,NC,27408,5ce707a0e00cf213743fc3d6
+Robyne Gray,2,2020-04-01,The Lash Lounge,Pending Active,Easton,MD,21601,5e84cf9d9adef398b15c58f0
+Ryan Sienkiewicz,2,2020-04-07,Bella Luce LTD,Active,Minneapolis,MN,55413,5e8cc0219adef3ea4ddb61bc
+Samuel Weaver,2,2020-03-24,Cornerstone Cars,Active,Wilmington,DE,19801,5e7a7a109adef3a8f1e7f1ca
+Scott Miller,2,2020-05-14,J & N Market,In-Process,Santa Ana,CA,92703,5ebdb463fc1ebc63df3f9cce
+Shawn Allen,2,2019-09-30,Southern Utah Insurance,Active,St. George,UT,84790,5d929c8dc21f8285d25493eb
+Stephen D'Amico,2,2019-10-25,Anew Aesthetics,Active,Franklin,TN,37067,5db3419fc21f82b04e453bae
+Steve Collin,2,2020-02-13,Siam Touch Thai Massage,In-Process,Farmington Hills,MI,48334,5e45eac7c21f828465c0e88f
+Susan Jenkins,2,2019-01-22,Bendover Wax Studio,Cancelled,Bend,OR,97702,5c47616ee00cf2763196aae3
+Teresa Hernandez,2,2019-11-13,Detective Dan Prod Test,Active,San Francisco,CA,94014,5dcc593bc21f8283798ef616
+Thomas Sanchez,2,2020-05-14,"Thomas W Sanders, OD inc",Active,Yuba City,CA,95991,5ebd6c83fc1ebc48c4e7ea0b
+Trevor Pierson,2,2020-02-26,Joseph Savoie Auto Detailing,In-Process,Arlington,TX,76096,5e56cebb9adef336711125aa
+Aaron Roy,1,2019-03-01,Dynamite Braids Hair Salon & Spa,Active,Philadelphia,PA,19135,5c79aba6e00cf21c77656f4c
+Aaron Studebaker,1,2018-11-09,Shear Dimensions,Active,Alexandria,IN,46001,5be61b89e00cf2771c2df997
+Abdellah Oubelk,1,2020-04-06,Central Fast Stop LLC,Active,New Albany,MS,38652,5e8b5c239adef3fa29af3c47
+Abiegail Sherrod,1,2020-03-27,Boss Babe Publications,Active,Ackerman,MS,39735,5e7e4d3d9adef34d602795a3
+Alisa Schoniwitz,1,2019-11-27,"Dana's Restaurant & Catering, LLC",Active,Waipahu,HI,96797,5ddf04b99adef3141fc52a37
+Amanda Kostelac,1,2018-09-12,Corner Cuts,Active,Millstdadt,IL,62260,5b99a7eae00cf20615e995bc
+Amy Peterson,1,2019-01-17,Susan's Beauty Parlor,Active,Greenville,PA,16125,5c3fd10ae00cf25afdbe8a7c
+Andrea Hughes,1,2019-12-05,Atalie Slone LMT,Active,Burlington,WA,98233,5de9931e9adef3a17262f788
+Andrea Nicklow,1,2018-08-29,Lux Exclusive Barbering,Cancelled,Brooklyn Park,MN,55444,5b870289e00cf201a8001518
+Andrew Freeman,1,2020-02-26,The Backyard Salon and Tanning,Active,Litchfield,MN,55355,5e584855c21f82af8fee5677
+Andrew Tu,1,2019-08-20,Silver Lining,Cancelled,San Jose,CA,95110,5d5c4d6e74cae93a9a848137
+Anna Roughton,1,2020-03-26,PEEK A BOO BODY WAXING,Active,Tucson,AZ,85710,5e7d2b41c21f82f36bf5b58e
+Annika Hilbrich,1,2020-02-14,Wildflower Salon & Spa,Active,Bozeman,MT,59718,5e472482c21f82cd04afdf07
+Anthony Caligiuri,1,2020-01-20,Bay Area POS,Active,Corte Madera,CA,94925,5e2619679adef37282e7f61e
+Armando Calvillo,1,2019-10-10,Unique Hair Boutique,Pre-Cancellation,Elmwood Park,IL,60707,5d9fc0e1c21f82d7a8b98e29
+Austin Wayne,1,2019-01-18,Salon 618,Cancelled,Hebron,IN,46341,5c4260aae00cf27274ca1fc3
+Bernadette Schuelke,1,2019-01-16,Totally Kids LLC,Active,Alpena,MI,49707,5c3e85bae00cf26ba396dd5c
+Bert Carder,1,2019-02-15,Vicki Henke,Cancelled,Farmington,NM,87401,5c675927e00cf21895f40f98
+Bert Whitehead,1,2020-01-24,Nails By Night,Cancelled,Las Vegas,NV,89103,5e2f2f05c21f82b5f5b45c5e
+Bill Blair,1,2020-01-31,Images of U Hair Studio,Active,Thurmont,MD,21788,5e35f5ff9adef368c06254ae
+Billy Taylor,1,2019-05-24,Senkas Carpet LLC,Active,Cumberland,MD,21502,5ce8485ce00cf213703fd77b
+Brandi Whitaker,1,2019-01-17,Isimadore Nappy Rutz,Cancelled,Florence,SC,29501,5c411520e00cf20d5dbe8e6b
+Brandin DuBos,1,2019-07-30,Lesley Rogers Hair LLC,Active,New Orleans,LA,70118,5d40a58b74cae92e7322c17c
+Brandon Barker,1,2020-05-12,Fat Alberts,Active,Gridley,IL,61744,5ebad505fc1ebc4043808f82
+Brandon Hunt,1,2020-03-10,Thairapy by Thereasa,Active,Galesburg,MI,49053,5e691d749adef3f306ce98c1
+Brenda Hamilton - Maier,1,2019-06-03,Nails 2000,Active,Spring,TX,77373,5cf5ba37e00cf27721e64e36
+Brian Robinson,1,2018-10-18,Vanity Room,Active,Muskegon,MI,49445,5bc8fc3de00cf2346325e0f8
+Brooke Forgetta,1,2020-05-15,Gearbangaz,In-Process,Merrimack,NH,3054,5ec2fac39adef30a18af9568
+Cecil Martin,1,2019-02-08,Cristal's Beauty Salon,Cancelled,evanston,IL,60201,5c5e28d7e00cf22da480ee53
+Chad Kingsbury,1,2018-12-07,Vincent & Company,Active,Evanston,IL,60201,5c0c47b8e00cf223b2e359cb
+Charles Winner,1,2018-10-03,Fingers of Faith Hair Salon,Active,Chesapeake,VA,23321,5bb5000de00cf202fa6fcdaa
+Cheyenne Marsh,1,2019-05-24,Burkys bar & Grill,Active,Cologne,MN,55322,5ce82c25e00cf257433fb9f3
+China Andrews,1,2019-05-22,Paris Parties and Spa,Cancelled,Lincoln,NE,68505,5ce723fee00cf2691e3fd634
+Chris Clifton,1,2019-06-04,Cuts and Shades of Color,Active,San Antonio,TX,78217,5cf6f5c4e00cf27721e65ae6
+Chris Fuller,1,2020-02-05,All Four Paws,Pre-Cancellation,New Lenox,IL,60451,5e3c54b29adef3767950759a
+Chris Sudekum,1,2019-06-01,FCC Motorsports,Active,Palmetto,FL,34221,5cf1cc46e00cf24426e654e8
+Christopher Braudis,1,2020-04-30,Behlmann Carnection,In-Process,Saint Peters,MO,63376,5eac64af9adef3c5a3ee4f5e
+CJ Robinson,1,2019-02-01,Dynamic Retail Solutions,Active,New Orleans,LA,70458,5c53a816e00cf2724e65b9ac
+Cody Mahler,1,2019-05-24,Myofascial Restoration and Integration,In-Process,Walnut Creek,CA,94598,5ce81f7ae00cf2691e3fdab2
+Connor Watkins,1,2020-03-13,Wildside Nails,Pending Active,McAllen,TX,78501,5e6fbc90c21f8284f3e08a81
+Corey Dager,1,2019-07-31,Hazzard Fitness and Tan,Active,Palatine Bridge,NY,13428,5d422ed274cae92e9a22b8ea
+CPAY Optout,1,2018-07-18,Chop Shop Barbershop,Active,KINGS MOUNTAIN,NC,28086,5b4fc674e00cf2653043bc34
+Dan Brennan,1,2019-11-01,April's Healing Hands,Active,Macomb,MI,48044,5dc0a81c9adef3f3b64bb580
+Daniel Cabanillas,1,2020-02-10,Larry's Auto Service,Active,Titusville,PA,16354,5e430901c21f82d5e836d9de
+Daniel Park,1,2020-03-06,Waynes College,In-Process,Salinas,CA,93906,5e668af09adef307da02b6ee
+Danny Kundzinsh,1,2019-12-11,Old Towne Auto and Trailer Registration,Active,Tehachapi,CA,93561,5df28c89c21f82ce5f795d48
+David Bohler,1,2018-09-19,Klassi Kutts,Cancelled,fitzgerald,GA,31750,5ba2869ee00cf21c3f3ff331
+David Hutson,1,2018-12-27,Mirror Image Salon,Cancelled,Kingsport,TN,37664,5c257c98e00cf24fd7df3248
+David Norfolk,1,2018-08-21,C Street Salon and Spa,Active,Fredridgesburg,VA,22401,5b7ca412e00cf22af05cd503
+Desmond Anderson,1,2019-05-29,Little Lighthouse Early Learning,Active,South Bend,IN,46615,5cf01d02e00cf22563e645fe
+Doug Hynes,1,2019-05-31,Smiley's Mobile Glass Shop Inc,Active,Richmond,VA,23225,5cf1de3de00cf24426e655e8
+Dwayne Nabors,1,2020-01-31,Dulce Salon Inc,Active,Robbinsdale,MN,55422,5e34bd809adef36cd9ebccbf
+Ederson Piola,1,2020-01-16,Preferred Limousine 8 Transportation,Active,Santa Barbara,CA,93105,5e20f75bc21f828ec5f3997d
+Edward Johnson,1,2020-03-19,Elite Academy,Active,Perry,OK,73077,5e73db669adef34cec5a603c
+Eli Van Evera,1,2019-11-14,Charley's General Construction,Active,Cameron,OK,74932,5dcd9f32c21f82d517610cff
+Elisa Hirakawa,1,2019-09-10,Fetal Memories 2D 3D 4D Ultrasound,Active,Orange,CA,92867,5d793cb974cae91817200f31
+Eric Rosenow,1,2019-05-28,Home Expressions,Active,Columbus,WI,53925,5ced9e70e00cf244db335f05
+Eric Wolfe,1,2020-01-20,Unveiled Beauty and Barber,Active,Williamsburg,VA,23188,5e2894399adef349d40ce153
+Erick Hernandez-Santos,1,2020-01-30,Desert M.A.D.E. Smog & Auto,Active,Cathedral City,CA,92234,5e332ebec21f82c170cece23
+Erin Reifler,1,2019-09-13,InsideOut,Active,san diego,CA,92101,5d8168f174cae93765e45b91
+Ernie Butcher,1,2019-10-01,"Puppy Paradise, LLC",Active,Jonesville,MI,49250,5d94c231c21f82b9957ef803
+Evan Moeller,1,2019-12-12,San Diego Myofascial Release,Pre-Cancellation,La Mesa,CA,91942,5df184b59adef3a13f14b6d8
+Evan Shively,1,2018-10-04,Detour Salon & Style,Cancelled,Anderson,IN,46013,5bb6787ce00cf202fa6fd06f
+Gabriel Fairchild,1,2020-04-20,WADS,In-Process,WESTMINSTER,CO,80031,5e9ddbeefc1ebc5a1129524f
+Gary Eubanks,1,2019-05-21,On-Site Automotive LLC,Active,Cushing,OK,74023,5ce593c6e00cf2691e3fc16d
+Gary Patman,1,2020-03-19,Fancy Nails Salon,Active,Grovetown,GA,30813,5e73e88dc21f826f6eb936cf
+Gene Mills,1,2018-09-12,Hairology Studio LLC,Active,north east,PA,16428,5b9955a0e00cf20615e99470
+George Pearson,1,2019-12-13,Rougarou Collective,Cancelled,Ponchatoula,LA,70454,5df40abac21f82b89f9af606
+Gerald Stewart,1,2019-05-20,SAVCO AUTO REPAIR & TIRE,Active,Moseley,VA,23120,5ce58b15e00cf213703fc8e2
+Glenda Maddy,1,2020-01-15,Amazing Grace Massage,Active,Summerville,SC,29483,5e1f9932c21f82c2ab464d82
+Grant Sides,1,2020-02-07,All The Rage Tattoo,Pre-Cancellation,Hartselle,AL,35640,5e3dda2c9adef371a4212743
+Heather McElhatton,1,2018-08-29,Hair by Ashley Buck,Terminated,Salinas,CA,93908,5b86a69be00cf201a8001415
+Henry Wilson,1,2020-03-25,Octavia's Lashes,Active,Chamblee,GA,30341,5e7ba8c6c21f8274a5b1a395
+Holly Cope,1,2019-08-02,R.E.D Space Salon,Active,South Euclid,OH,44121,5d44a30774cae91d804ae188
+James Palmer,1,2018-08-30,Unleashed Dog Grooming,Active,Olive Branch,MS,38654,5b885651e00cf201a800172f
+James Peacock,1,2018-08-28,Today Clips,Cancelled,Fort Worth,TX,76123,5b859811e00cf201a80012e2
+Jan Walding,1,2018-08-30,Southern Charm Hair Salon,Active,Sneads,FL,32460,5b8874eae00cf201a80017b5
+Janine Prater,1,2020-03-30,Lotus Acupuncture and Chinese Medicine LLC,Active,Broken Arrow,OK,74011,5e82798b9adef3e5f5c7447c
+Jason DelValle,1,2020-04-01,Gracar Auto Center Repair & Towing,Active,Shrewsbury,MA,1545,5e84e47a9adef387f27ad9bc
+Jason Tressa,1,2019-10-14,Wrench Junky Auto Services,Active,Lithonia,GA,30058,5da4d15ec21f8250365a755d
+Jeff Hankins,1,2020-05-12,En Pointe Hair Studio,Active,Glens Falls,NY,12801,5ebadf37fc1ebc5416e54193
+Jeff Rutherford,1,2018-06-08,Euphoria Reign,Active,Youngtown,AZ,85363,5b1abef9f92ea17aa9e8a7cb
+Jerry Harper,1,2020-01-16,Executive Beauty Bar,Active,Falling Waters,WV,25419,5e2221b29adef31f107c7cd1
+Jerry Hudson,1,2020-05-05,Radiant Brilliance,Active,Las Vegas,NV,89117,5eb1ef15fc1ebc1d7f946bae
+Jim Gallagher,1,2018-09-06,Studio 17,Cancelled,Fox Lake,IL,60020,5b9186e0e00cf26900bac24e
+Jitka Mears,1,2019-08-26,Healing Spa and Massage,Active,West Palm Beach,FL,33409,5d64492b74cae92cefa3c569
+Joe Bernot,1,2019-06-10,Xin Sui Reflexology,Active,Delmont,PA,15626,5cfeb3cce00cf212c7b40a31
+Joe Wagner,1,2019-11-13,SpotOn South Florida,Pending Active,Boca Raton,FL,33433,5dcc618cc21f82943a60f021
+Johanna Dunn,1,2019-05-24,Clifton Liquor,Active,Clifton,CO,81520,5ced8d70e00cf244dc335c98
+John Barish,1,2019-05-17,Mark's Discount Office Furniture,Active,Virginia Beach,VA,23452,5cdf4591e00cf213733fbf6f
+John Meyer,1,2019-05-21,Petit Auto & Performance LLC,Cancelled,Minong,WI,54859,5ce5c612e00cf258563fd697
+John Rodriguez,1,2018-12-13,Petrichor Float Center,Cancelled,wildomar,CA,92595,5c12a11ce00cf20d13703a79
+Jolina Maitland,1,2020-03-17,Odren's Auto Service,Active,Coldwater,MI,49036,5e71308cc21f82c1acdb1cbf
+Jordan Roberson,1,2020-05-05,Keen Insight Energy,Active,Sanford,FL,32771,5eb19f93fc1ebc01d734b82f
+Jorge Verduga Jr,1,2019-12-21,Hair Designs By Eve,Active,Miami,FL,33196,5e0158909adef37ab15e5fb9
+Josaphat Arteaga,1,2019-12-13,Southern Beauty Spa and Salon,Active,Harlingen,TX,78550,5df7c78a9adef3e295e8cf45
+Jose Valines,1,2019-08-09,Vitruvian Fitness Concepts LLC,Cancelled,Miami Beach,FL,33139,5d4dc2c03b543615674e89d1
+Joseph Garay,1,2020-01-14,C&R Bookkeeping & Tax Services,Active,Chula Vista,CA,91910,5e1f8c89c21f82c2fa530e07
+Justin Anderson (1099),1,2020-05-07,Regional Repair Enterprises,Active,Colorado Springs,CO,80916,5eb4a07f9adef3590a07d72a
+Kanaan Greene,1,2020-04-08,Revolutionary Fit,Active,Kings Mtn,NC,28086,5e8df23a9adef36cf918760d
+Kelly Wyatt,1,2019-05-30,IDK Bar,Active,El Paso,TX,79924,5cf0398fe00cf275c5e646ce
+Kevin Beckstrand,1,2020-03-04,A to Z Bail Bonds,Pre-Cancellation,Wichita Falls,TX,76301,5e6015ada74b6d06427ab942
+Kimberly Hensley,1,2019-08-20,Beauty Bar,Active,Ashland,KY,41101,5d5c6a7b74cae93a9a84823b
+Knox Gattis,1,2018-07-20,Itz Styles Salon,Active,Fredericksburg,TX,78624,5b521ef5e00cf2653043be94
+Kristen Bornstein,1,2019-05-09,The Bridge Community Church,Cancelled,Clearwater,FL,33760,5cd5dca9e00cf2246ecb141d
+Kurt Howard,1,2018-11-27,Rejuvenique & Graceful Touch Salon,Cancelled,Plaquemine,LA,70764,5bfdbb5de00cf2254cb680bf
+Kyle Montgomery,1,2019-06-04,Composure Health Spa,Active,Sand Spinas,OK,74063,5cf6bbc3e00cf25dcae64589
+Lance Myles,1,2018-07-11,Raw Remedies LLC,Active,Las Vegas,NV,89104,5b4668dee00cf20743e3cb9e
+Lawrence ( Larry) Friedlander,1,2019-10-16,Eyetailor Optical,Active,North Palm Beach,FL,33408,5da7b4a09adef3403c7ac572
+Leah Burton,1,2020-02-21,Skateland Reloaded,Pending Active,Big Spring,TX,79720,5e5450a99adef31a71325487
+Leandra Khouri,1,2019-11-27,Biosol Beauty Salon,Pre-Cancellation,Somerville,MA,2145,5de54c99c21f828317eaa524
+Lee Chassy,1,2019-03-07,Merle Norman Cosmetics & Spa,Cancelled,Hinsdale,IL,60521,5c82b34be00cf219f06d1c4e
+Lena Pysareva,1,2018-06-25,Emma Justine Hair Lounge and Spa,Cancelled,Louisville,KY,40243,5b314e7ee00cf21b85c2bb6d
+Leon Winther,1,2019-11-23,Traditions Salon,Active,Seymour,TN,37865,5dd8898c9adef33f751e3cd9
+Leslie Rodriquez,1,2019-01-24,The Princess's Carriage,Active,Rose Bud,AR,72137,5c4a4971e00cf254e9228862
+Lester Simpson,1,2020-03-04,A Cut Above Pet Salon,Active,La Verne,CA,91750,5e5efa819adef3d0ebc62f0c
+Linda Quintana,1,2018-08-17,Waves Massage,Active,Coral Springs,FL,33071,5b772d7ee00cf22af05cd11f
+Lisa Printup,1,2019-05-29,"Alpine Janitorial, Inc",Active,Sparks,NV,89435,5cef0b43e00cf27508372eed
+Lonn Mejiano,1,2018-08-02,Sophisticated Ink,Active,Kennewick,WA,99336,5b60e48ce00cf2653043cc10
+Lori Jaid,1,2020-04-27,Vibes Nails and Lotion Bar,Active,Johnson City,TN,37601,5ea72af3fc1ebc35b7d6da86
+Luis Cantu,1,2020-01-17,A New Horizon Community Services,Active,Edinburg,TX,78541,5e25e8349adef3a85df7bd4f
+Lulu Miao,1,2019-08-06,SCENE SPACE NAIL BAR,Active,LOS ANGELES,CA,90028,5d49e96474cae97ca53232eb
+MaeChell Watson,1,2018-09-02,Saltopia At Melody's,Cancelled,Columbus,OH,43221,5b8c4ac5e00cf247cf92d2c0
+Marcy Thompson,1,2020-02-06,Rick’s Fertilizer LLC,In-Process,Grand Island,NE,68801,5e3c7726a74b6d171a130bb2
+Mark Hughes,1,2020-05-08,RockIt Studio,Pending Active,Schaumburg,IL,60193,5eb5e6ff9adef3e95bf9b802
+Mark Reinmiller,1,2020-01-09,Swan Nails,Active,Las Vegas,NV,89148,5e1901fd9adef39ddc956888
+Matt Green,1,2019-07-03,Farm Of Dreams,Active,Brooksville,FL,34602,5d1cfca774cae923ff680391
+Matt May,1,2020-01-29,Style And Sass,Active,Saint Augustine,FL,32084,5e330cf1c21f82b75bf896dd
+Maurice Miller,1,2019-11-18,Time II Shine Haircuts,Pre-Cancellation,Oklahoma City,OK,73159,5dd4860a9adef31cb6a5bc4f
+Maxwell Bernhardt,1,2019-11-12,Hair Mechanix,Active,Columbia,MO,65202,5dcc4f509adef351cb1d498d
+Megan Talbot,1,2020-03-12,Adela's Lash Studio,Active,San Antonio,TX,78254,5e6ad07c9adef3cf4b228092
+Michael Anderson,1,2019-05-20,Chad's Auto Repair,Active,Becker,MN,55308,5ce2f3ffe00cf213703fbc19
+Michael Antonicelli,1,2020-03-09,Collins Funeral Home,Active,Norwalk,CT,6851,5e66724c9adef3767b611b0e
+Michael Smith,1,2020-02-27,Calvin Allen Brown,In-Process,North Charleston,SC,29418,5e57e8f39adef34155ab70c4
+Michelle Carty,1,2020-01-09,Mohawk Valley Sylez,Active,Amsterdam,NY,12010,5e17c9cdc21f826bcdd94d3f
+Mike Boyle,1,2019-05-17,Carlton-Gray Systems Inc,Active,Ashland,VA,23005,5cdf2239e00cf213703fb852
+Mike Hobbs,1,2018-09-06,Life Chiropractic Center,Active,Post Falls,ID,83854,5b917fd0e00cf26900bac22f
+Mike McCabe,1,2020-01-09,Vamachara,Active,Port Jefferson Station,NY,11776,5e1754579adef3dafd421f5e
+Mike Thomas,1,2019-10-29,Sud Busters,In-Process,Lake charles,LA,70615,5db8ab36a74b6d38605ed672
+Mike Thompson,1,2019-07-12,Rediscover Yourself LLC,Active,Green Bay,WI,54304,5d29145974cae94032a6c9da
+Minh (Sam) Tran,1,2020-03-16,Ceja's Detailing,Active,Yuba City,CA,95991,5e710bf09adef35c463f2269
+Mischa Redmond,1,2018-08-17,Style Escape,Active,Osceola,WI,54020,5b771508e00cf22af05cd095
+Nancy Jones,1,2018-11-26,The Chosen One Salon,Cancelled,North Little Rock,AR,72118,5bfc69afe00cf2254cb668c1
+Nancy Mabson,1,2019-06-10,Shelly Sanders,Pre-Cancellation,Montrose,CO,81402,5cffddf0e00cf212c7b41118
+Nathan Hoover,1,2018-11-26,Tete a Hair Salon,Cancelled,Lakeside,MT,59922,5bfc7b0de00cf2254cb66c4d
+Nathaniel Evans,1,2019-08-27,Intermountain Massage Therapy College,Active,Bountiful,UT,84010,5d656e9274cae962dcf22d2a
+Nicholas Rhodes,1,2019-07-01,Wilkinson Rhodes,Cancelled,San Antonio,TX,78212,5d1a4e3b74cae938b06431ec
+Nick LaVan,1,2020-04-22,The Painted Pallet,Active,Sylvania,GA,30467,5ea0dc769adef3e3507cb0c8
+Orion Vilchis,1,2019-11-21,New Wave Barbershop,Active,Beachwood,NJ,8722,5dd736699adef302ffc9f2a5
+Paul Chen,1,2019-06-26,675 Y V Spa,Active,Walnut Creek,CA,94596,5d14e8f7e00cf23be5e11323
+Paul Saccardo,1,2019-02-21,Anthony Fredrick Salon,Cancelled,Dedham,MA,2026,5c6f2bc8e00cf2384f451524
+Paul Sirilla,1,2018-12-14,Dragonfly Permanent Makeup,Active,Wilmington,NC,28403,5c17e09be00cf2683c7027cc
+Quaid Tatlow,1,2019-11-26,Champions Health Club,Active,Atascadero,CA,93422,5ddeced79adef3cb7dc2c6d4
+Rachel Ferrie,1,2019-10-25,Salon Allison,Active,Knoxville,TN,37922,5db3630dc21f82d8a5a87089
+Rafael Diaz,1,2020-01-30,Donni Services,Active,Miami,FL,33186,5e332f3f9adef3f2b3e57d02
+Randy Butler,1,2020-04-29,Midwest Chiropractic Center,Active,Worthington,OH,43085,5ea9f2799adef3dcaba66504
+Randy Rinehart,1,2019-02-18,The Golf Vault 2,Cancelled,Columbia,MO,65201,5c6b2e86e00cf24295f40d4e
+Ray Sample,1,2019-08-29,1040 Tax,Active,Walla Walla,WA,99362,5d684e6874cae937c0d43536
+Raymond Rochelle,1,2019-05-20,LJ's Salon & Styles,Active,Littlerock,AR,72204,5ce42e26e00cf258563fc507
+Reggie Williams,1,2018-08-06,Activmeals,Active,Fresno,CA,93720,5b688995e00cf21df4fe331f
+Ricardo Munoz,1,2019-05-31,Diagnostico Por Imagen By Juan Antonio,Active,Guadalajara,JAL,44520,5cf0745659d39717b8be42bf
+Richard Karlis,1,2019-07-26,French Pastry Cafe & More,Active,Aspen,CO,81611,5d3b776374cae9216822ad38
+Richard Lattman,1,2019-09-18,Elite Performance Physical Therapy LLC,Active,Oregon City,OR,97045,5d82af7174cae91649e45c80
+Richard Myatt,1,2019-03-19,Rosewood Hair Studio,Pre-Cancellation,Thornton,CO,80023,5c914249e00cf20fe790b435
+Rick Jenkins,1,2019-04-30,Danielle Murry,Active,Dothan,AL,36301,5cc9dabce00cf2793ef83c65
+Rick Segers,1,2019-05-30,SpringMart,Active,Darlington,SC,29532,5cf04788e00cf22567e64787
+Rob Snyder,1,2019-10-09,ROCKABETTYS HAIR PARLOR,Active,YUBA CITY,CA,95791,5d9e42f6c21f82be50161726
+Rocky Self,1,2019-05-14,Holly's Nails,Cancelled,Harrisonburg,VA,22801,5cdb4d36e00cf24d66cb14c7
+Roylan Shaff,1,2019-07-08,1 Nail Spa,Cancelled,Cary,NC,27519,5d23977e74cae95e1303bbd3
+Ryan Collado,1,2020-02-11,Haircuts by Harold LLC,Active,Lafayette,CA,94549,5e4483dac21f822fc2cd5e01
+Ryan DeMars,1,2019-11-22,The Salty Paw Grooming Salon,Active,Charleston,SC,29407,5ddc5c759adef3d3e4100370
+Ryan Glass,1,2020-03-03,Casa Blanca Barbershop Debra Zimmer,Active,Tucson,AZ,85704,5e5ec683c21f82b88dd78189
+Sally Debets,1,2020-04-20,Cindy's Housekeeping,In-Process,Titusville,FL,32796,5e9dffe7fc1ebc5e6000b08d
+Sarah Kang,1,2019-05-31,Bubbles Dog Grooming ANd Spa,Cancelled,Huntington Beach,CA,92646,5cf56dd0e00cf27f35e66382
+Sarah Luke,1,2019-04-22,Sarah Luke,Cancelled,Henderson,CO,80640,5cbe3af059d3976c962f6f7c
+Sarai Saavedra,1,2020-01-08,ANDY'S CUSTOM UPHOLSTERY,Active,SAN MARCOS,CA,92078,5e1677ab9adef381df75f41d
+Scott Deady,1,2020-01-24,REINOS TAILOR SHOP,Active,CHICAGO,IL,60614,5e2b8e029adef3ac03454341
+Scott Green,1,2020-05-01,Lash On Wax Off,In-Process,Tampa,FL,33629,5eb04607fc1ebc3429606d14
+Scott Strahan,1,2020-05-08,Fisherman’s Mobile RV Repair,Active,Odessa,TX,79762,5eb5cba79adef38f99cd461b
+Sean Adams,1,2019-01-22,Tango,Active,Ukiah,CA,95482,5c47a511e00cf2515c96b5a9
+Sean Currenton,1,2019-09-06,"Public, Mail & More",Active,Sacramento,CA,95822,5d72f10874cae93fca1087f0
+Shahee Madden,1,2019-05-23,Crossroads Cafe & Catering LLC,Active,Penn Laird,VA,22846,5ce70eece00cf258563fe08f
+Shannon Gusler,1,2019-05-21,Wolf's Den Billiards,Active,Roanoke,VA,24019,5ce5808de00cf2691e3fbebb
+Sharon Smith,1,2019-05-23,"Rob's Auto & Diesel Repair, Inc",Active,Williamston,NC,27892,5ce6ed9ee00cf213703fd058
+Sophia Barry,1,2018-12-04,Ever Beautiful A Skin Wellness Studio,Cancelled,Thiensville,WI,53092,5c071e0fe00cf26b71f1c9c0
+Stephanie Rodriguez,1,2020-04-08,Solar Panel FL CORP,In-Process,Orlando,FL,32825,5e8e45fe9adef38d0d181a9e
+Stephen Chew,1,2020-02-14,Auto Service Solutions,Pre-Cancellation,Manchester,NH,3103,5e4ac07b9adef39078480ad2
+STEPHEN ROBINSON,1,2020-01-16,Holmes Chiropractic Inc,Active,Houston,TX,77008,5e2224209adef31f107c7d42
+Steve Thomas,1,2019-09-30,iMassage Corrective Bodywork,Active,Wabash,IN,46992,5d9266f6dc454698af07c053
+Steven Leonard,1,2019-10-18,REDD NOSE INKIES,Active,ROLLA,MO,65401,5dadfa13c21f820ee20b4fbd
+Steven Moore,1,2020-01-22,Best Brake & More Inc,Active,Rogers,AR,72756,5e28db87c21f82a02cd9eb13
+Terrill Humphrey,1,2019-05-28,Salon Honey and Sage,Cancelled,Saint Augustine,FL,32095,5ceec37ce00cf2750837268a
+Tim Gingerich,1,2020-01-27,Beauty Brow Inc,Active,North Royalton,OH,44133,5e30da19c21f82252303c5ef
+Timothy Bekemeier,1,2019-12-05,The Hair Connection,Active,Conover,NC,28613,5de993bf9adef3a40b68e385
+Timothy Washington,1,2018-08-16,New Concept By Maribel,Cancelled,Elizabeth,NJ,7201,5b759d82e00cf22af05cce00
+Toni Vardiman,1,2019-10-22,All Styling Studio,Unable-to-Activate,Denville,NJ,7834,5daf68b29adef39780c867d9
+TX Central Processing INC,1,2019-07-10,Insignia Hair Salon,Active,Walnut Creek,CA,94596,5d267e5274cae96d099703cd
+Tyler Stanley,1,2020-04-07,MINABELLA BEAUTY RESORT,Active,Omaha,NE,68154,5e8ca5509adef3893c9fa3ec
+Vickie Lombano,1,2020-02-19,ART OF EYEBROW THREADING,Active,Edmond,OK,73012,5e4ec7a39adef3e79dcfda58
+William (Neal) Shipwash,1,2020-01-31,Five Corner Cuts,Active,Granby,MA,1033,5e36349d9adef30b15df974e
+William DeFoy,1,2018-08-30,Vanity Hair Co,Active,Portsmouth,OH,45662,5b7c3876e00cf22af05cd380
+William Powers,1,2019-06-24,GeTHere Denver,Active,Denver,CO,80204,5d115e36e00cf23be5e102f1
+Zach Salazar,1,2020-05-14,Divine Beauty Suite,In-Process,Mission Viejo,CA,92691,5ebd7b4afc1ebc4edb295748
+Zhenya Kirueshkin-Stepanoff,1,2019-05-29,Center for Integrated Health,Cancelled,Danville,CA,94526,5cef074159d39706999db1a6

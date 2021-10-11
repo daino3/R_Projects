@@ -1,0 +1,9 @@
+"0","```r
+cg_organic_train <- cg_organic[sample_train_org,] 
+cg_organic_test <- cg_organic[-sample_train_org,]
+
+lrm <- glm(converted ~ ., family=binomial(logit), data=cg_organic_train)
+# plot_model(lrm, show.values = TRUE, transform = NULL)
+# plot_model(lrm, show.values = TRUE, transform = NULL, type = \"eff\")
+varimp.logistic(lrm) %>% plotimp.logistic()
+```"

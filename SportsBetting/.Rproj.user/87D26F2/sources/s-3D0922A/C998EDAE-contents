@@ -1,0 +1,145 @@
+---
+title: "Spots Betting"
+output: html_notebook
+---
+
+### Load packages:
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+library(dplyr)
+```
+
+```{R}
+# Create three vectors 
+bet <- c("villanova", "iowa", "virginia", "gonzaga")
+opponent <- c("creighton", "michigan st", "UNC", "san francisco")
+bet_amount <- c(100, 50, 100, 100)
+to_win <- c(90, 45, 70, 70)
+
+# Create data frame 
+gambling <- data.frame(bet, opponent, bet_amount, to_win)
+gambling
+
+gambling <- gambling %>% mutate(implied_odds=to_win/(bet_amount+to_win))
+gambling
+
+expand.grid(bet, win_loss=c(TRUE, FALSE))
+
+input <- data.frame(stringsAsFactors = FALSE,
+                    bet,
+                    win_loss=c(TRUE, FALSE))
+input
+k <- 3
+combinations <- combn(x = seq_len(length.out = nrow(x = input)),
+                      m = k)
+combinations
+```
+
+```{R}
+require(ggplot2)
+sampa=rnorm(1000000,0,1)
+sampb=rnorm(1500000,3,1)
+combined = c(sampa, sampb)
+plt = ggplot(data.frame(combined), aes(x=combined)) + stat_bin(binwidth=0.25, position="identity")
+plt
+
+```
+```{r}
+# https://web.stanford.edu/class/bios221/labs/simulation/Lab_3_simulation.html
+require(parallel)
+
+# sports betting
+winner <- c("villanova", "iowa", "virginia", "gonzaga")
+game <- c("villanova v creighton", "iowa v mich st", "virginia v UNC", "gonzaga v SF")
+bet_amount <- c(100, 50, 100, 100)
+to_win <- c(90, 45, 70, 70)
+
+# source: https://www.legitgamblingsites.com/online-betting/calculating-odds/
+# moneyline formula
+# Decimal odds of -300 == 75%
+# Decimal odds of -150 == 60%
+# Decimal odds of +250 == 28.57%
+#  to_win   $ bet    to_win 
+1 - 100   / (300  +  100) # $300 to win 100
+1 - 100   / (150  +  100) # $150 to win 100
+1 - 250   / (100  +  250) # $100 to win 250
+# Fractional odds of -300 ==
+# 300/100 == 3:1
+# bet v payout
+1 - 70 / (100 + 70)
+
+# Create data frame 
+gambling <- data.frame(winner, game, bet_amount, to_win)
+
+game.results <- gambling %>% 
+  rowwise() %>% 
+  mutate(prob_to_win=1 - to_win / (bet_amount + to_win)) %>%
+  mutate(is_win=sample(0:100,1) / 100 < prob_to_win)  %>% 
+  mutate(profit=ifelse(is_win, to_win, -bet_amount))
+game.results
+
+
+```
+
+```{R}
+gamblingProfit = function(gamesDF, withWinLossParlays){
+  game.results <- gamesDF %>% 
+    rowwise() %>% 
+    mutate(prob_to_win=1 - to_win / (bet_amount + to_win)) %>%
+    mutate(is_win=sample(0:100,1) / 100 < prob_to_win)  %>% 
+    mutate(profit=ifelse(is_win, to_win, -bet_amount))
+
+  if (withWinLossParlays) {  
+    all.win.parlay <- data.frame(winner = "All Win Parlay", 
+                                 game = "ALL", 
+                                 bet_amount=50, 
+                                 prob_to_win=1 - 50 / (450),
+                                 to_win=400, 
+                                 is_win=all(game.results$is_win==TRUE)) %>% 
+                      mutate(profit=ifelse(is_win, to_win, -bet_amount))
+    all.loss.parlay <- data.frame(winner = "All Loss Parlay", 
+                                  game = "ALL", 
+                                  bet_amount=50, 
+                                  prob_to_win=1 - 50 / (1850),
+                                  to_win=1800, 
+                                  is_win=all(game.results$is_win==FALSE)) %>%
+                      mutate(profit=ifelse(is_win, to_win, -bet_amount))
+  
+    game.results <- game.results %>% rbind(all.win.parlay) %>% rbind(all.loss.parlay)
+  }
+  sum(game.results$profit)
+}
+
+simulator = function(gamesDF, withWinLossParlays, numTrials) {
+  simulation.results <- data.frame()
+  for (i in 1:numTrials) {
+    simulation.results <- simulation.results %>% rbind(data.frame(profit=gamblingProfit(gamesDF, withWinLossParlays)))
+  }
+  simulation.results
+}
+```
+```{r}
+# TODO:
+# rolling profit over time
+# normal curve
+# graphs
+
+sim.results <- simulator(gambling, TRUE, 1000)
+sim.results <- sim.results %>%
+  mutate(sim_num=rownames(sim.results)) %>%
+  mutate(less_than_0= 1 * (profit < 0))
+
+summarise(sim.results, sum=sum(profit), mean=mean(profit), min=min(profit), max=max(profit), num_less_zero=sum(less_than_0))
+ggplot(sim.results, aes(x=sim_num, y=profit)) + geom_point()
+```
+```{r}
+sim.results.no.parlays <- simulator(gambling, FALSE, 1000)
+sim.results.no.parlays <- sim.results.no.parlays %>%
+  mutate(sim_num=rownames(sim.results.no.parlays)) %>%
+  mutate(less_than_0= 1 * (profit < 0))
+
+summarise(sim.results.no.parlays, sum=sum(profit), mean=mean(profit), min=min(profit), max=max(profit), num_less_zero=sum(less_than_0))
+sum(sim.results.no.parlays$profit)
+
+
+ggplot(sim.results.no.parlays, aes(x=sim_num, y=profit)) + geom_point()
+```

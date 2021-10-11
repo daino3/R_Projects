@@ -1,0 +1,308 @@
+---
+title: "Dain Hall"
+author:
+- name: 81
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+### Determine notebook defaults:
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE,      # Print all the code in all the chunks
+                      warning=FALSE,  # Don't print warning statements
+                      message=FALSE,  # Don't print other R output messages
+                      comment=NA)     # Helps produce prettier output
+```
+
+### Load packages:
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+# install.packages("sjPlot")
+# devtools::install_github("fzettelmeyer/mktg482", upgrade = "never", force = TRUE)
+# install.packages("effects")
+library(gmodels)
+library(modelr)
+library(janitor)
+library(haven)
+library(readxl)
+library(knitr)
+library(psych)
+library(statar)
+library(tidyverse)
+library(sjPlot)
+library(mktg482)
+library(scales)
+library(effects)
+# library(clipr)
+```
+
+### Read in the data:
+```{r}
+# rm(list=ls())
+load("/Users/dain/Programs/R_Projects/MKTG_482_HW3/bbb.Rdata")
+```
+
+# Assignment answers
+
+## Part 1 - Logistic Regression
+
+### Question 1
+
+Estimate a logistic regression model using “buyer” as the dependent variable and the
+following as predictor variables:
+* gender 
+* last
+* total 
+* child 
+* youth 
+* cook 
+* do_it 
+* reference 
+* art
+* geog
+
+```{r}
+lrm <- glm(buyer ~ gender + last + total + child + youth + cook + do_it + reference + art + geog, family=binomial(logit), data=bbb)
+summary(lrm)
+```
+
+### Question 2
+
+Use “plot_model(..., show.values = TRUE, transform = NULL)” to display the coefficients and confidence intervals. Which variables are statistically significant and which ones seem to be economically ‘important’?
+
+
+```{r}
+plot_model(lrm, show.values = TRUE, transform = NULL)
+"
+All variables appear to be statistically significant according to their P-values.
+However, the variables with the greatest absolute values of their intercepts include art, gender, geog, and do_it.
+These variables, therefore, should have the greatest economic 'importance' as predictors of buyership.
+"
+```
+
+### Question 3
+
+Use the “plot_model(..., type=”eff”)” command to plot marginal effects. For which variables does your assessment of the importance of a variable change and why?
+
+
+```{r}
+plot_model(lrm, show.values = TRUE, transform = NULL, type = "eff")
+```
+
+```{r}
+varimp.logistic(lrm) %>% plotimp.logistic()
+"
+↑ art, last, geog, gender - these variables have greater impact than originally expected
+↓ do_it, total            - these variables have less impact than originally expected
+"
+```
+
+
+### Question 4
+
+Add the predicted values of the logistic regression model to the “bbb” data frame. For the first few observations in the data, visually compare the “buyer” variable to the predicted values. Next, for the full dataset, compare the average of the predicted values with the average of the “buyer” variable. What do you notice? Why is that?
+
+```{r}
+bbbPred <- bbb %>%
+   mutate(pred_buyer=predict(lrm, type = "response"))
+
+bbbPred %>% select(buyer, pred_buyer) %>% arrange(desc(pred_buyer))
+```
+```{r}
+"
+For the entire dataset, the averages of buyer and predicted buyer using the lrm are the same.
+It makes sense that this is the case because we used the dataset to generate the lrm model.
+"
+bbbPred %>% summarise(avg_buyer=mean(buyer), avg_pred_buyer=mean(pred_buyer))
+```
+
+## Part 2 - Decile Analysis of Logistic Regression Results
+
+### Question 1
+
+Assign each customer to a decile based on his or her predicted probability of purchase. Assign those with the highest predicted probability of purchase to decile 1 and those with the lowest predicted probability of purchase to decile 10.
+
+```{r}
+decileBBB <- bbbPred %>%
+   mutate(pred_buyer_decile = ntile(-pred_buyer, 10)) %>%
+   group_by(pred_buyer_decile) %>%
+   summarise(num_cust=n(), num_buyers=sum(buyer), resp_rate=sum(buyer)/n(), pred_resp_rate=mean(pred_buyer))
+
+decileBBB
+```
+
+### Question 2
+
+Create a bar chart plotting response rate by decile (as just defined above).
+Hint: The “response rate” is not the same as the "predicted probability of purchase" that the model generated. Instead, it is the actual percentage of customers in a given group (for example a decile) that have bought "The Art History of Florence."
+
+```{r}
+ ggplot(decileBBB, aes(x=pred_buyer_decile, y=pred_resp_rate)) + 
+   geom_col() + 
+   scale_x_continuous(labels=scales::number_format(accuracy = 1)) + 
+   scale_y_continuous(labels=scales::percent_format(accuracy = 1))
+
+ ggplot(decileBBB, aes(x=pred_buyer_decile, y=resp_rate)) + 
+   geom_col() + 
+   scale_x_continuous(labels=scales::number_format(accuracy = 1)) + 
+   scale_y_continuous(labels=scales::percent_format(accuracy = 1))
+```
+
+
+### Question 3
+
+Generate a report showing number of customers, the number of buyers of “The Art History of Florence’ and the response rate to the offer by decile for the random sample (i.e. the 50,000) customers in the dataset.
+
+```{r}
+decileBBB %>% select(decile=pred_buyer_decile, num_cust, num_buyers, resp_rate)
+
+```
+
+## Part 3 - Lifts & Gains
+
+### Question 1
+
+Use the information from the report in II.3 above to create a table showing the lift and
+cumulative lift for each decile. You may want to use Excel for these calculations.
+
+```{r}
+# clipr::write_clip(decileBBB)
+total_customers <- sum(decileBBB$num_cust)
+total_buyers <- sum(decileBBB$num_buyers)
+blended_resp_rate <- total_buyers / total_customers
+lift_and_gains <- decileBBB %>% 
+   mutate(cum_cust=cumsum(num_cust), cum_buyers=cumsum(num_buyers), cum_resp_rate=cumsum(resp_rate), lift=resp_rate / blended_resp_rate, cum_lift=(cum_buyers / cum_cust) / blended_resp_rate, cum_gains=cum_buyers / total_buyers, gains=num_buyers / total_buyers, perc_cum_cust=cum_cust/total_customers) %>% 
+   select(pred_buyer_decile, num_cust, cum_cust, num_buyers, cum_buyers, gains, cum_gains, lift, cum_lift, perc_cum_cust)
+
+lift_and_gains %>% select(everything(), -perc_cum_cust, -gains, -cum_gains)
+```
+
+### Question 2
+
+In Excel, create a chart showing the cumulative lift by decile.
+
+
+```{r}
+ggplot(lift_and_gains, aes(x=pred_buyer_decile, y=cum_lift)) + geom_line() + 
+   scale_x_continuous(labels=scales::number_format(accuracy = 1))
+```
+
+### Question 3
+
+Use the information from the report in II.3 above to create a table showing the gains and cumulative gains for each decile. You may want to use Excel for these calculations.
+
+
+```{r}
+lift_and_gains %>% select(everything(), -lift, -cum_lift, -perc_cum_cust)
+```
+
+### Question 4
+
+In Excel, create a chart showing the cumulative gains by decile along with a reference line corresponding to ‘no model’.
+
+
+```{r}
+ggplot(lift_and_gains, aes(x=pred_buyer_decile)) + 
+   geom_line(aes(y = cum_gains), color = "darkred") + 
+   geom_line(aes(y = perc_cum_cust), color="steelblue", linetype="twodash")  + 
+   scale_x_continuous(labels=scales::number_format(accuracy = 1), expand = c(0, 0)) + 
+   scale_y_continuous(labels=scales::percent_format(accuracy = 1), expand = c(0, 0)) + 
+   theme(
+      legend.position = c(0.95, 0.95),
+      legend.justification = c("right", "top")
+   )
+"
+GRADER PLEASE NOTE: there may be a bug in ggplot where with 'expand' - I could not get the x/y axis to correctly start at 0, so the gains are shifted
+"
+```
+
+Hint: Please integrate the Excel-generated charts into the R Notebook you are using for the rest of this assignment. Here is how:
+• Save the graphs and tables in Excel as pdf files
+• Place the pdf files into the same directory as your R Notebook for the assignment
+• Use the “include_graphics()” command to insert each pdf.
+• For example, suppose your pdf is called “cum_lift.pdf”, then insert the code
+block:
+• Please note the header of the code block. There you can change the width of the chart (here 70% of page width) and how it is aligned (here centered).
+
+
+## Part 4 - Profitability Analysis
+
+Use the following cost information to assess the profitability of using logistic regression to
+target customers:
+
+| Item            | Price/Cost    | 
+| --------------- |:-------------:| 
+| selling price   | $18.00        | 
+| cost to mail    | $0.50         | 
+| Wholesale price | $9.00         | 
+| Shipping costs  | $3.00         | 
+
+
+### Question 1
+
+What is the breakeven response rate?
+
+```{r}
+price <-  18
+cogs <- 9 + 3
+marginal_cost <- 0.5
+
+net_rev <- price - cogs
+break_even_rate <- marginal_cost / net_rev
+percent(break_even_rate, 0.01)
+```
+
+### Question 2
+
+For the customers in the dataset, create a new variable (call it “target”) with a value of 1 if the customer’s predicted probability is greater than or equal to the breakeven response rate and 0 otherwise. (Hint: in mutate() multiply the TRUE/FALSE expression with “1” to get a 0/1 variable).
+
+```{r}
+bbb_final <- bbbPred %>%
+  mutate(target=1*(pred_buyer>break_even_rate))
+bbb_final %>% select(pred_buyer, target) %>% arrange(desc(target))
+```
+
+### Question 3
+
+For the customers in the dataset, if had you used the model to select which customer to target, what percentage of customer would you have targeted? Of those customers you would have targeted, what percentage would have purchased the "Art History of Florence?"
+
+```{r}
+
+targeted_customers <- bbb_final %>%
+  filter(target==1) %>%
+  summarise(frac_mailed=n()/nrow(bbb_final), resp_rate=mean(buyer))
+
+targeted_customers
+```
+
+### Question 4
+
+For the 500,000 remaining customers, what would the expected profit (in dollars) and the expected return on marketing expenditures have been if BookBinders had mailed the offer to buy “The Art History of Florence” only to customers with a predicted probability of buying that was greater than or equal to the breakeven rate? Make the calculations in R?
+
+```{r}
+ntargeted_customers <- 500000 * targeted_customers$frac_mailed
+targeted_resp_rate <- targeted_customers$resp_rate
+targeted_costs <- ntargeted_customers * marginal_cost
+targeted_revenue <-ntargeted_customers * targeted_resp_rate * net_rev
+profit_w_targeting <- targeted_revenue - targeted_costs
+paste(
+   "Targeted Profit: ", dollar(profit_w_targeting),
+   "Targeted ROI: ", percent(profit_w_targeting / (targeted_costs), 0.1)
+)
+```
+
+### Question 5
+
+For the 500,000 remaining customers, calculate the incremental profit of having used the logistic regression model instead of a mass mailing?
+
+```{r}
+no_targ_revenue <- 500000 * blended_resp_rate * net_rev
+no_targ_costs <- 500000 * marginal_cost
+profit_wo_targeting <- no_targ_revenue - no_targ_costs
+profit_wo_targeting
+paste(
+   "Untargeted Profit", dollar(profit_wo_targeting), 
+   "Untargeted ROI", percent(profit_wo_targeting / (no_targ_costs), 0.1), 
+   "Incremental Targeted Profit: ", dollar(profit_w_targeting - profit_wo_targeting)
+)
+```

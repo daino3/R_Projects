@@ -1,0 +1,41 @@
+"0","```r
+skim_without_charts(cg_organic)
+```"
+"1","── Data Summary ────────────────────────
+                           Values    
+Name                       cg_organic
+Number of rows             30000     
+Number of columns          20        
+_______________________              
+Column type frequency:               
+  factor                   6         
+  numeric                  14        
+________________________             
+Group variables            None      
+
+── Variable type: factor ────────────────────────────────────────────────────────────────────────────────────────────────
+  skim_variable          n_missing complete_rate ordered n_unique top_counts        
+1 AcquiredSpaceship              0             1 FALSE          2 0: 21695, 1: 8305 
+2 AcquiredIonWeapon              0             1 FALSE          2 0: 29439, 1: 561  
+3 PurchasedCoinPackSmall         0             1 FALSE          2 0: 19857, 1: 10143
+4 PurchasedCoinPackLarge         0             1 FALSE          2 0: 22061, 1: 7939 
+5 UserNoConsole                  0             1 FALSE          2 0: 24546, 1: 5454 
+6 UserHasOldOS                   0             1 FALSE          2 0: 27411, 1: 2589 
+
+── Variable type: numeric ───────────────────────────────────────────────────────────────────────────────────────────────
+   skim_variable           n_missing complete_rate      mean      sd    p0   p25   p50   p75  p100
+ 1 converted                       0             1    0.0575   0.233     0     0     0     0     1
+ 2 GameLevel                       0             1    6.25     2.77      1     4     7     9    10
+ 3 NumGameDays                     0             1   12.2      7.10      1     6    13    18    28
+ 4 NumGameDays4Plus                0             1    1.26     3.19      0     0     0     0    24
+ 5 NumInGameMessagesSent           0             1   73.8    107.        0     0    26   112  1227
+ 6 NumSpaceHeroBadges              0             1    0.444    1.52      0     0     0     0    12
+ 7 NumFriendRequestIgnored         0             1   29.6     34.0       0     0    16    53   121
+ 8 NumFriends                      0             1   47.7     94.3       0     0     5    43   486
+ 9 TimesLostSpaceship              0             1    4.44    11.5       0     0     0     4   298
+10 TimesKilled                     0             1    0.293    3.42      0     0     0     0   178
+11 TimesCaptain                    0             1    1.58     8.77      0     0     0     0   429
+12 TimesNavigator                  0             1    1.40     7.95      0     0     0     0   545
+13 NumAdsClicked                   0             1    9.49     7.40      0     4     8    12    38
+14 DaysUser                        0             1 2626.     661.      244  2162  2557  3105  4139
+"

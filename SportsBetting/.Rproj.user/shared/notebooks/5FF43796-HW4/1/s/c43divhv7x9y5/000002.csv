@@ -1,0 +1,14 @@
+"0","```r
+\"
+1. NumSpaceHeroBadges: [POS] - As number of space hero badges go up, probability of 
+   conversion goes up almost to 100% (S-shaped)
+2. TimesLostSpaceship: [NEG] - As # of times lost spaceship goes up, probability of
+   conversion goes down from 4% to almost 0%
+3. NumFriendRequestIgnored: [NEG] - As number of friend requests ignored goes up,
+   probability of conversion does down
+4. GameLevel: [POS] - As Game Level goes up, so does probability - from 2% to 5%+
+5. AcquiredSpaceship1: [POS] - Yes/No: If Acquired Spacehip, probability jumps from ~3% to ~5%
+\"
+```"
+"1","[1] \"\n1. NumSpaceHeroBadges: [POS] - As number of space hero badges go up, probability of \n   conversion goes up almost to 100% (S-shaped)\n2. TimesLostSpaceship: [NEG] - As # of times lost spaceship goes up, probability of\n   conversion goes down from 4% to almost 0%\n3. NumFriendRequestIgnored: [NEG] - As number of friend requests ignored goes up,\n   probability of conversion does down\n4. GameLevel: [POS] - As Game Level goes up, so does probability - from 2% to 5%+\n5. AcquiredSpaceship1: [POS] - Yes/No: If Acquired Spacehip, probability jumps from ~3% to ~5%\n\"
+"

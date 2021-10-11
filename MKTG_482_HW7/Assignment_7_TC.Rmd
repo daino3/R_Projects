@@ -1,0 +1,291 @@
+---
+title: 'ASSIGNMENT 7: S-Mobile - Predicting Customer Churn'
+author:
+- Section 81
+- Trevor Cornell
+- Dain Hall
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+# Preliminaries
+### Determine notebook defaults:
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE,      # Print all the code in all the chunks
+                      warning=FALSE,  # Don't print warning statements
+                      message=FALSE,  # Don't print other R output messages
+                      comment=NA)     # Helps produce prettier output
+```
+### Load packages:
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+library(gmodels)
+library(glue)
+library(modelr)
+library(janitor)
+library(haven)
+library(readxl)
+library(knitr)
+library(psych)
+library(statar)
+library(tidyverse)
+library(skimr)
+library(mktg482)
+library(sjPlot)
+library(nnet)
+# install.packages('formattable')
+library(formattable)
+library(scales)
+library(ranger)
+```
+
+### Read in the data:
+```{r}
+load("smobile_churn.Rdata")
+smobile <- smobile %>% mutate(churn=factor(churn))
+smobile.train <- smobile %>% filter(training==1)
+smobile.test <- smobile %>% filter(training==0)
+set.seed(1234)
+```
+
+# Assignment answers
+# PART 1
+
+## 1 - Develop Models to Predict
+
+After trying a variaety of models, it seems that logistic regressiondoes perform the best of the group. And if there were any doubt as to choosing one of the other tests, the ability to interpret the logistic regression makes it the clear choice.
+
+```{r}
+fm <- as.formula(churn ~ revenue + mou + overage + roam + changem + changer + dropvce + 
+                   blckvce + unansvce + custcare + threeway + months + uniqsubs + phones + 
+                   eqpdays + age + agemiss + children + creditaa + refurb + occprof + 
+                   occcler + occcrft + occstud + occhmkr + occret + occself + travel + 
+                   retcalls + refer + incmiss + income + mcycle )
+lr <- glm(fm, family=binomial, data=smobile.train)
+rf <- ranger(fm, data=smobile.train, probability=TRUE, mtry=5, min.node.size=1)
+nn <- nnet(fm, data=smobile.train, size=3, decay=0.1, maxit=1000)
+
+smobile.test <- smobile.test %>%
+  mutate(pred_lr = predict(lr, newdata=smobile.test, type="response"),
+         pred_rf = predict(rf, data=smobile.test, type="response")[[1]][,2],
+         pred_nn = predict(nn3, newdata=smobile.test, type="raw"))
+
+gainsplot(smobile.test$pred_lr, 
+          smobile.test$pred_rf,
+          smobile.test$pred_nn, 
+          label.var = smobile.test$churn)
+
+
+```
+
+## 2 - Identify Main Drivers
+
+We can see in the variable importance chart and graph below. Since we are dealing with current customers, we are going to focus on the top non-demopraphic variables to deal with in this case. Looking at these variables that can be acted upon, we are left to consider two variables are positively correlated with churn: Number of days of current equipment and Average number of blocked voice calls. Then on the other hand, we can also consider two variables that have a negative correlation with churn - Mean monthly minutes of use and number of referrals made by subscriber.
+
+
+```{r}
+varimp.logistic(lr) %>% plotimp.logistic()
+```
+
+## 3 - Develop Actions/Offers/Incentives
+
+Number of days of current equipment (+)
+Average number of blocked voice calls (+)
+Mean monthly minutes of use (-)
+Number of referrals made by subscriber (-)
+
+Based on the above criteria we have identified as important, we are planning to test out three new actions. 
+
+First, we can offer a $200 coupon for customers that have had their device for over a number of years, which we hope will help to re-invest customers that may have otherwise been close to churning, by showing them some of our newer offerings. This should reduce the number of days of current equiptment variable.
+
+Second, we can offer a beta trial of our new telemarketer-blocking service to customers that average a high number of blocked calls. This is a service that we have been working on that will identify and auto-block robo-calls. 
+
+Third, we can offer a referral incentive of a $50 credit on your bill if you make at least one referral.
+
+## 4 - Estimate Impact
+
+We are now going to create three new datasets based off of our Rollout dataset, but with the impact of our test actions incorporated. 
+
+For the first version, our research shows that 7% of customers that receive our coupon, will in fact upgrade to a new device. For that reason, those 7% of customers who were previously seen with old equipment,  will have their eqpdays reduced to 0. We will try this with 1, 2 and 3 year timelines.
+
+For the second version, we see research supporting the fact that our service will reduce the number of robocalls dramatically, and cuts the number of blocked calls by 80%. We will try this for customers that were blocking 5, 10 and 15 calls.
+
+For the third version, we find that one of every 20 customers on average will refer a new customer after this incentive is offered. This would likely have to be a universal rollout, but we can see the effect of offering it to only those who have not referred customers in the past, versus offering it to all customers.
+
+
+```{r}
+#Create new variables to keep track of treated data
+rollout <- rollout%>%
+  mutate(eqpdays1y=ifelse(eqpdays>365,1,0),
+         eqpdays2y=ifelse(eqpdays>730,1,0),
+         eqpdays3y=ifelse(eqpdays>1095,1,0),
+         blckvce5=ifelse(blckvce>=5,1,0),
+         blckvce10=ifelse(blckvce>=10,1,0),
+         blckvce15=ifelse(blckvce>=15,1,0),
+         refernew=ifelse(refer==0,1,0))
+
+
+rm(rollout_coupon1,rollout_coupon2,rollout_coupon3,rollout_block5,rollout_block10,
+   rollout_block15,rollout_refernew,rollout_referall)
+
+#Create copies of the rollout data, that can be altered based on actions described above
+rollout_coupon1 <- data.frame(rollout)
+rollout_coupon2 <- data.frame(rollout)
+rollout_coupon3 <- data.frame(rollout)
+rollout_block5 <- data.frame(rollout)
+rollout_block10 <- data.frame(rollout)
+rollout_block15 <- data.frame(rollout)
+rollout_refernew <- data.frame(rollout)
+rollout_referall <- data.frame(rollout)
+
+# tracemem(rollout)==tracemem(rollout_coupon1)
+
+#Create vectors of customers that will be affected by first action
+coupon.customers1 <- rollout %>%
+  filter(eqpdays>365)%>%
+  sample_frac(.07)%>%
+  select(customer)
+coupon.customers2 <- rollout %>%
+  filter(eqpdays>730)%>%
+  sample_frac(.07)%>%
+  select(customer)
+coupon.customers3 <- rollout %>%
+  filter(eqpdays>1095)%>%
+  sample_frac(.07)%>%
+  select(customer)
+
+
+#Update equipment days in copies of data to reflect first action
+rollout_coupon1 <- rollout_coupon1 %>%
+  mutate(eqpdays = ifelse(customer %in% coupon.customers1$customer,0,eqpdays))
+rollout_coupon2 <- rollout_coupon2 %>%
+  mutate(eqpdays = ifelse(customer %in% coupon.customers2$customer,0,eqpdays))
+rollout_coupon3 <- rollout_coupon3 %>%
+  mutate(eqpdays = ifelse(customer %in% coupon.customers3$customer,0,eqpdays))
+     
+
+#Create vectors of customers that will be affected by second action
+block.customers5 <- rollout %>%
+  filter(blckvce>=5)%>%
+  select(customer)
+block.customers10 <- rollout %>%
+  filter(blckvce>=10)%>%
+  select(customer)
+block.customers15 <- rollout %>%
+  filter(blckvce>=15)%>%
+  select(customer)
+
+#Update blocked calls in copies of data to reflect second action
+rollout_block5 <- rollout_block5 %>%
+  mutate(blckvce = ifelse(customer %in% block.customers5$customer,blckvce*.2,blckvce))
+rollout_block10 <- rollout_block10 %>%
+  mutate(blckvce = ifelse(customer %in% block.customers10$customer,blckvce*.2,blckvce))
+rollout_block15 <- rollout_block15 %>%
+  mutate(blckvce = ifelse(customer %in% block.customers15$customer,blckvce*.2,blckvce))
+
+#Create vectors of customers that will be affected by third action
+refer.customersnew <- rollout %>%
+  filter(refer==0)%>%
+  sample_frac(.05)%>%
+  select(customer)
+refer.customersall <- rollout %>%
+  sample_frac(.05)%>%
+  select(customer)
+
+#Update referrals in copies of data to reflect third action
+rollout_refernew <- rollout_refernew %>%
+  mutate(refer = ifelse(customer %in% refer.customersnew$customer,refer+1,refer))
+rollout_referall <- rollout_referall %>%
+  mutate(refer = ifelse(customer %in% refer.customersall$customer,refer+1,refer))
+
+```
+
+## 5 - Decide on Targets
+Using the methodology above, we can then look at the effects that all of the treatments have on Churn. Below, we look at this both within the groups that are directly being treated, as well as in the Rollout group overall. Based on the overall churn rate of the rollout group, we see that the most promising action is the telemarketer blocking offer to all customers that average atleast 5 blocked calls. This reduces churn by around 20% in that group of customers and by almost 0.2% in the rollout group overall.
+
+```{r}
+#Baseline Churn prediction
+churn_baseline <- predict(lr, newdata=rollout, type="response")%>% mean()
+
+#Churn prediction for customers with device for 1 year, before and after treatment
+churn_1y <- predict(lr, newdata=rollout %>% 
+                      filter(eqpdays1y==1), type="response")%>% mean()
+churn_1y_treat <- predict(lr, newdata=rollout_coupon1 %>% 
+                            filter(eqpdays1y==1), type="response")%>% mean()
+(churn_1y-churn_1y_treat)/churn_1y
+#Churn prediction for customers with device for 2 years, before and after treatment
+churn_2y <- predict(lr, newdata=rollout %>% 
+                      filter(eqpdays2y==1), type="response")%>% mean()
+churn_2y_treat <- predict(lr, newdata=rollout_coupon2 %>% 
+                            filter(eqpdays2y==1), type="response")%>% mean()
+
+(churn_2y-churn_2y_treat)/churn_2y
+#Churn prediction for customers with device for 3 years, before and after treatment
+churn_3y <- predict(lr, newdata=rollout %>% 
+                      filter(eqpdays3y==1), type="response")%>% mean()
+churn_3y_treat <- predict(lr, newdata=rollout_coupon3 %>% 
+                            filter(eqpdays3y==1), type="response")%>% mean()
+(churn_3y-churn_3y_treat)/churn_3y
+
+#Churn prediction for customers with an average of at least 5 blocked calls, before and after treatment
+churn_block5 <- predict(lr, newdata=rollout %>% 
+                          filter(blckvce5==1), type="response")%>% mean()
+churn_block5_treat <- predict(lr, newdata=rollout_block5 %>% 
+                                filter(blckvce5==1), type="response")%>% mean()
+(churn_block5-churn_block5_treat)/churn_block5
+#Churn prediction for customers with an average of at least 10 blocked calls, before and after treatment
+churn_block10 <- predict(lr, newdata=rollout %>% 
+                           filter(blckvce10==1), type="response")%>% mean()
+churn_block10_treat <- predict(lr, newdata=rollout_block10 %>% 
+                                 filter(blckvce10==1), type="response")%>% mean()
+(churn_block10-churn_block10_treat)/churn_block10
+#Churn prediction for customers with an average of at least 15 blocked calls, before and after treatment
+churn_block15 <- predict(lr, newdata=rollout %>% 
+                           filter(blckvce15==1), type="response")%>% mean()
+churn_block15_treat <- predict(lr, newdata=rollout_block15 %>% 
+                                 filter(blckvce15==1), type="response")%>% mean()
+(churn_block15-churn_block15_treat)/churn_block15
+#Churn prediction for customers with no previous referrals, before and after treatment
+churn_new <- predict(lr, newdata=rollout %>% 
+                       filter(refernew==1), type="response")%>% mean()
+churn_new_treat <- predict(lr, newdata=rollout_refernew %>% 
+                             filter(refernew==1), type="response")%>% mean()
+(churn_new-churn_new_treat)/churn_new
+#Churn prediction for all customers, before and after treatment
+churn_all <- predict(lr, newdata=rollout, type="response")%>% mean()
+churn_all_treat <- predict(lr, newdata=rollout_referall, type="response")%>% mean()
+(churn_all-churn_all_treat)/churn_all
+
+#Effects of the above treatment on the overall Rollout Group
+predict(lr, newdata=rollout, type="response")%>% mean()
+predict(lr, newdata=rollout_coupon1, type="response")%>% mean()
+predict(lr, newdata=rollout_coupon2, type="response")%>% mean()
+predict(lr, newdata=rollout_coupon3, type="response")%>% mean()
+predict(lr, newdata=rollout_block5, type="response")%>% mean()
+predict(lr, newdata=rollout_block10, type="response")%>% mean()
+predict(lr, newdata=rollout_block15, type="response")%>% mean()
+predict(lr, newdata=rollout_refernew, type="response")%>% mean()
+predict(lr, newdata=rollout_referall, type="response")%>% mean()
+
+```
+
+## 6 - Evaluate Economics
+Below we can see the lifetime value calculations that detail the economic benfit per customer, for each new cost and churn rate.
+We will make the following assumptions:
+ - begin with the average annual revenue from the rollout customers,
+ - annual revenue groth of 5%,
+ - baseline cost of 50% of revenue,
+ - discount rate of 10%,
+ - since we did mutliple iterations of each action, we will caculate LTV on the version with the greatest effect:
+    - Coupon for 1 year old devices: Churn of .0386, cost of $200 per redeemed coupon, 
+    - call blocking for greater than 5 average blocked calls: Churn of .0375, no explicit cost, 
+    - referrals for all customers: Churn of .0385, cost of $50 per referral
+    
+We can see below that the Call Blocking and Referral Incentives both create customer LTV, by $6.08 and $0.32 respectively, while the Coupon offer reduces LTV by $3.16.
+
+```{r}
+paste("Starting Revenue:",dollar(mean(rollout$revenue)*12))
+paste("Cost of Coupon per Customer:",dollar((nrow(coupon.customers1)*200)/8012))
+paste("Cost of Referral Incentive:",dollar((nrow(refer.customersall)*50)/8012))
+include_graphics("LTV.pdf")
+```

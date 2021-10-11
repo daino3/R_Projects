@@ -1,0 +1,21 @@
+Date,APR,Type,Fee,Card_Type,Num_Mailed,Num_Accounts,Avg_BK
+April,16.8,Fixed,20,MC,167000,1533,210
+,16.8,Fixed,0,MC,81000,2896,210
+,19.8,Fixed,20,MC,143000,590,210
+,19.8,Fixed,0,MC,100000,2052,210
+September,14.9,Fixed,20,Visa,177000,4329,255
+,14.9,Variable,20,Visa,170000,3004,255
+,16.8,Fixed,20,Visa,255000,2983,255
+,19.8,Fixed,20,Visa,35000,175,255
+,16.8,Fixed,0,Visa,65000,2516,255
+,19.8,Fixed,0,Visa,95000,2115,255
+November,14.9,Fixed,20,Visa,82000,1761,190
+,14.9,Fixed,0,Visa,50000,2451,190
+,14.9,Variable,20,Visa,50000,708,190
+,16.8,Fixed,20,Visa,50000,372,190
+Mailing 1,14.9,Variable,0,Visa,12500,432,150
+,16.8,Fixed,0,Visa,112500,1660,150
+,16.8,Fixed,0,Visa,112500,2310,200
+,16.8,Variable,0,Visa,12500,256,200
+,19.8,Fixed,0,Visa,112500,2063,250
+,19.8,Variable,0,Visa,12500,192,250

@@ -1,0 +1,221 @@
+---
+title: 'ASSIGNMENT 5: Creative Gaming Uplift Modeling'
+author:
+- Section 81
+- Trevor Cornell
+- Dain Hall
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+# Preliminaries
+### Determine notebook defaults:
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE,      # Print all the code in all the chunks
+                      warning=FALSE,  # Don't print warning statements
+                      message=FALSE,  # Don't print other R output messages
+                      comment=NA)     # Helps produce prettier output
+```
+### Load packages:
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+library(gmodels) 
+library(modelr) 
+library(janitor) 
+library(haven) 
+library(readxl) 
+library(knitr) 
+library(psych) 
+library(statar) 
+library(tidyverse) 
+library(splitstackshape) 
+library(ranger) 
+# library(tools4uplift) 
+library(mktg482) 
+library(scales)
+```
+
+### Read in the data:
+```{r}
+load("/Users/dain/Programs/R_Projects/MKTG_482_HW5/creative_gaming.Rdata")
+cg_organic <- cg_organic %>%
+  mutate(converted=factor(converted))
+cg_organic_control <- cg_organic_control %>%
+  mutate(converted=factor(converted))
+cg_ad_treatment <- cg_ad_treatment %>%
+  mutate(converted=factor(converted))
+```
+
+# Assignment answers
+# PART 1
+
+## 1.1 - Preparation of Data
+###1.1.A
+Below creates a random sample of the treatment group.
+```{r}
+cg_ad_random <- cg_ad_treatment[sample_random_30000,]
+```
+###1.1.B
+Below creates a stacked dataset of the control group and the random sample of the treatment group.
+```{r}
+expdata_stacked <-
+  rbind(cg_organic_control %>% mutate(ad = 0), 
+        cg_ad_random %>% mutate(ad = 1))
+```
+###1.1.C
+Below we then split this stacked dataset into a training dataset and a test dataset. We can then look at a couple quick balance checks to ensure the randomization.
+```{r}
+set.seed(1234)
+split.index <- stratified(expdata_stacked,
+                          c("ad","converted"), 0.7, bothSets=TRUE)
+expdata_stacked.train <- split.index[[1]]
+expdata_stacked.test <- split.index[[2]]
+expdata_stacked.train
+
+expdata_stacked %>% tabyl(ad,converted) %>% adorn_percentages("all")
+expdata_stacked.train %>% tabyl(ad,converted) %>% adorn_percentages("all")
+expdata_stacked.test %>% tabyl(ad,converted) %>% adorn_percentages("all")
+```
+
+
+## 1.2
+Here we run two separate random forest models, one on the treatment data within the training subset of the stacked dataset, and another on the control data within the same training subset of the stacked dataset. Using these two models we can create treatment prediction and a control prediction for all observations in the test data, and then use difference between these two predictions to create a corresponding uplift score for each observation.
+```{r}
+rf_treat <- ranger(converted ~ . - ad,
+             data=expdata_stacked.train %>% filter(ad==1), 
+             probability=TRUE, mtry=4, min.node.size=1)
+rf_control <- ranger(converted ~ . - ad,
+             data=expdata_stacked.train %>% filter(ad==0), 
+             probability=TRUE, mtry=4, min.node.size=1)
+
+expdata_stacked.test <- expdata_stacked.test %>%
+  mutate(pred_rf_treat = predict(rf_treat, data=expdata_stacked.test, type="response")[[1]][,2],
+         pred_rf_control = predict(rf_control, data=expdata_stacked.test, type="response")[[1]][,2],
+         uplift_score = pred_rf_treat - pred_rf_control)
+
+expdata_stacked.test %>%
+  arrange(-uplift_score) %>%
+  select(converted, ad, pred_rf_treat, pred_rf_control, uplift_score) %>%
+  head()
+```
+
+###1.3
+Below we visualize the performace of the uplift model. Using the Qini Curve, we can see that the incemental uplift increases to just over 8% and then begins to plateau around the point at which 85% of the population is being targeted. The bar plot provides additional information and its general trend following a negative slope does provide comfort in the fact that the potential customers have been grouped effectively according to their likliehood to buy relative to the ad treatment.
+```{r}
+PerfTable_uplift <- QiniTable(expdata_stacked.test,
+                              treat = "ad",
+                              outcome = "converted",
+                              prediction = "uplift_score",
+                              nb.group = 20)
+QiniCurve(PerfTable_uplift)
+QiniBarPlot(PerfTable_uplift)
+```
+
+###1.4
+If you were to target the best 30,000 customers, according to the uplift model, you would target the top 25% or first 5 ventiles of the population.
+In the first 5 ventiles of the test data, 655 customers were converted, out of 2,250 targeted, with 506 of them incremental as a result of the treatment. This is a 22.5% incremental conversion rate, and when applied to 30,000 targeted customers, would result in 6,751 incremental conversions. This would result in $101,201 of incremental revenue and $45,000 in incurred costs for the treatment, with an incremental profit of $56,201.
+```{r}
+population <- 120000
+revenue_per <- 14.99
+cost_per <- 1.50
+Cum_per <- .25
+
+PerfTable_top5_up <- PerfTable_uplift %>%
+  filter(cum_per==Cum_per)
+Incremental_conv_perc_up <- PerfTable_top5_up$incremental_Y1/PerfTable_top5_up$T_n
+Incremental_conv_up <- Incremental_conv_perc_up*(Cum_per*population)
+
+Revenue_up <- Incremental_conv_up*revenue_per
+Cost_up <- (Cum_per*population)*cost_per
+
+Profit_up<-Revenue_up-Cost_up
+
+Profit_up
+
+```
+
+###1.5
+Below we can compare the performance of the uplift model to that of a propensity model. In the Qini Curve, we can see similar performance in the early ventiles, but then begins to lag at the point when we move past around 20% of the population being targeted. Also using the propensity model it is more difficult to identify the point at which the model is most effective. The cureve hits an initial high around 45% of the popultion being targeted, and then continues a second ascension through the remainder of the population.
+When looking at the bar chart, a similar pattern can be seen and the negative slope of the model is much leas clear. This is specifically true in the later ventiles, where it becomes clear that the propensity model does not do well to organize the customers with lower incrementality - there is very little trend to be seen from around the 8th to the 20th ventile.
+```{r}
+PerfTable_prop <- QiniTable(expdata_stacked.test,
+                              treat = "ad",
+                              outcome = "converted",
+                              prediction = "pred_rf_treat",
+                              nb.group = 20)
+QiniCurve(PerfTable_uplift,
+            PerfTable_prop,
+            modelnames = c("Uplift Model", "Propensity Model"))
+
+QiniBarPlot(PerfTable_uplift,
+            PerfTable_prop,
+            modelnames = c("Uplift Model", "Propensity Model"))
+```
+
+###1.6
+If you were to target the best 30,000 customers, according to the propensity model, you would target the top 25% or first 5 ventiles of the population.
+In the first 5 ventiles of the test data, 702 customers were converted, out of 2,250 targeted, with 479 of them incremental as a result of the treatment. This is a 21.3% incremental conversion rate, and when applied to 30,000 targeted customers, would result in 6,390 incremental conversions. This would result in $95,797 of incremental revenue and $45,000 in incurred costs for the treatment, with an incremental profit of $50,979.
+This shows us an additional profit of $5,404.34 when using the uplift model versus the propensity model.
+```{r}
+PerfTable_top5_prop <- PerfTable_prop %>%
+  filter(cum_per==Cum_per)
+Incremental_conv_perc_prop <- PerfTable_top5_prop$incremental_Y1/PerfTable_top5_prop$T_n
+Incremental_conv_prop <- Incremental_conv_perc_prop*(Cum_per*population)
+
+Revenue_prop <- Incremental_conv_prop*revenue_per
+Cost_prop <- (Cum_per*population)*cost_per
+
+Profit_prop <- Revenue_prop-Cost_prop
+
+Profit_up-Profit_prop
+```
+
+# PART 2
+###2.1
+In order to select the optimal percent of target customers to maximize overall profit, we can use the propensity score to identify cases in which the expected revenue is greater than the cost of the treatment. Using the previously created propensity model, this would result in targeting 51.3% of the population, as seen below.
+```{r}
+Opt_Target_prop <- expdata_stacked.test %>%
+  mutate(ExpRev_prop=pred_rf_treat*revenue_per)%>%
+  filter(ExpRev_prop>cost_per)
+nrow(Opt_Target_prop)/nrow(expdata_stacked.test)
+
+```
+###2.2
+In order to select the optimal percent of target customers to maximize incremental profit, we can use the uplift score to identify cases in which the expected increase in revenue is greater than the cost of the treatment. Using the previously created uplift model, this would result in targeting 35.4% of the population, as seen below.
+```{r}
+Opt_Target_up <- expdata_stacked.test %>%
+  mutate(ExpRev_up=uplift_score*revenue_per)%>%
+  filter(ExpRev_up>cost_per)
+nrow(Opt_Target_up)/nrow(expdata_stacked.test)
+
+```
+
+###2.3 - 
+
+Using the optimal target percentages as determined above, we can then calcuate the resulting profits and compare them to the control population. Below we can see that the Propensity model treats a rounded 50% of the population, resulting in total profit of $8,105.09, compared to $6,565.62 in the control, resulting in an incremental profit of $1,539.47.
+Using the uplift model, we treat 35% of the popultation and when using the targets as determined by the model we see a profit of $6,967.20. The control group shows an organic profit of $2,728.18, resulting in an incremental profit of $4,239.02.
+
+```{r}
+Cum_per_prop <- .5
+PerfTable_optimal_prop <- PerfTable_prop %>%
+  filter(cum_per==Cum_per_prop) %>%
+  mutate(Control=round(T_Y1-incremental_Y1))
+
+Profit_optimal_prop <- (PerfTable_optimal_prop$T_Y1*revenue_per)-(PerfTable_optimal_prop$T_n*cost_per)
+Profit_control_prop <- (PerfTable_optimal_prop$Control*revenue_per)
+Profit_optimal_prop-Profit_control_prop
+
+Cum_per_up <- .35
+PerfTable_optimal_up <- PerfTable_uplift %>%
+  filter(cum_per==Cum_per_up) %>%
+  mutate(Control=round(T_Y1-incremental_Y1))
+
+Profit_optimal_up <- (PerfTable_optimal_up$T_Y1*revenue_per)-(PerfTable_optimal_up$T_n*cost_per)
+Profit_control_up <- (PerfTable_optimal_up$Control*revenue_per)
+Profit_optimal_up-Profit_control_up
+
+```
+###2.4
+
+Above, we can see the incremental profits are higher for the uplift model
+STILL NEED ANSWERS HERE

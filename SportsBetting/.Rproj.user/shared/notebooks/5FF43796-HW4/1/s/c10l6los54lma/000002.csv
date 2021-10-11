@@ -1,0 +1,5 @@
+"0","```r
+paste(\"OrganicProb(convert): \", percent(mean(cg_organic$converted), 0.01))
+```"
+"1","[1] \"OrganicProb(convert):  5.75%\"
+"

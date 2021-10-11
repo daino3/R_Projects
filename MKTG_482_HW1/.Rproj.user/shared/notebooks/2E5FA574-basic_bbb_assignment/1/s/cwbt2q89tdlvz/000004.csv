@@ -1,0 +1,2 @@
+"0","purch_by_gender <- bbb %>% group_by(gender) %>% summarise(total_purch=sum(purch), avg_purch=mean(purch))"
+"0","purch_by_gender"

@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1605413811599.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "349FE309",
+    "lastKnownWriteTime" : 1605532507,
+    "last_content_update" : 1605532507896,
+    "path" : "~/Programs/R_Projects/Stocks/app.R",
+    "project_path" : "app.R",
+    "properties" : {
+        "cursorPosition" : "66,0",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

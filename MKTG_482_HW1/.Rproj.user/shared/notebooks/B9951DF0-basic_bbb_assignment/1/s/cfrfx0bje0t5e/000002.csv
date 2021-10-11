@@ -1,0 +1,1 @@
+"0","bbb %>% slice(0:50) %>% ggplot(aes(x=nonbook, y=book, color=gender)) + geom_point()"

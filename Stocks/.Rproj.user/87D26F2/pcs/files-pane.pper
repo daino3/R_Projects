@@ -1,0 +1,9 @@
+{
+    "path" : "~/Programs/R_Projects/Stocks",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

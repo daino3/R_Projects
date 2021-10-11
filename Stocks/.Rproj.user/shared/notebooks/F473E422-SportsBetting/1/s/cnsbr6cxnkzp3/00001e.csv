@@ -1,0 +1,12 @@
+"0","sim.results <- simulator(gambling, TRUE, 2000)
+# sim.results 
+message(""With Parlays: "", sum(sim.results$profit))
+"
+"2","With Parlays: 7134
+"
+"0",""
+"0","sim.results.no.parlays <- simulator(gambling, FALSE, 2000)"
+"0","# sim.results.no.parlays"
+"0","message(""Without Parlays: "", sum(sim.results.no.parlays))"
+"2","Without Parlays: -30745
+"

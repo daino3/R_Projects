@@ -1,0 +1,1 @@
+"0","bbb %>% mutate(months_between=(first - last)) %>% summarise(avg_mos=mean(months_between), min_mos=min(months_between), max_mos=max(months_between))"

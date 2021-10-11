@@ -1,0 +1,5 @@
+"0","```r
+cg_ad_random <- cg_ad_treatment[sample_random_30000,]
+
+profit_func(cg_ad_random, revenue_per, cost_per)
+```"

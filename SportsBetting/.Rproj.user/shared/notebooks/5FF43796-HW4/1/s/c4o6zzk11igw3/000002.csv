@@ -1,0 +1,5 @@
+"0","```r
+cg_organic_test <- cg_organic_test %>% mutate(score_lr = predict(lrm, newdata=cg_organic_test, type=\"response\"))
+
+gplot <- gainsplot(cg_organic_test$score_lr, label.var = cg_organic_test$converted)
+```"

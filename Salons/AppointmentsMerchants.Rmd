@@ -42,7 +42,7 @@ library(ggmap)
 
 ## Load Data
 ```{r}
-register_google("AIzaSyCZo0PhpV5JdPWC4iivTp8GJZ0c3ZeG41E")
+register_google("GOOGLE_API_KEY")
 
 daily_appointments = read.csv("daily_appointments.csv", header = TRUE)
 daily_appointments <- daily_appointments %>% mutate(created_at=as.Date(created_at))
